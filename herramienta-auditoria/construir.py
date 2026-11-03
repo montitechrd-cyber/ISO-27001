@@ -6,7 +6,7 @@ base = pathlib.Path(__file__).parent
 src = base / "src"
 js = "\n".join(
     (src / nombre).read_text(encoding="utf-8")
-    for nombre in ["datos-norma.js", "datos-soa.js", "datos-sesiones.js", "datos-guias.js", "app.js"]
+    for nombre in ["datos-norma.js", "datos-soa.js", "datos-lista.js", "datos-sesiones.js", "datos-guias.js", "plantillas.js", "formatos.js", "app.js"]
 )
 html = (src / "plantilla.html").read_text(encoding="utf-8")
 html = html.replace("/*CSS*/", (src / "estilo.css").read_text(encoding="utf-8"))

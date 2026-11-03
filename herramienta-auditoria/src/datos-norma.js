@@ -206,10 +206,28 @@ const TIPOS = {
   seguimiento:{n:'Requiere seguimiento',c:'t-seg',abbr:'SEG'},
   na:{n:'No aplica',c:'t-na',abbr:'N/A'}
 };
-const DEF_TIPOS = [
-['No conformidad mayor','Ausencia total de un requisito de la norma, o falla sistémica (varias NC menores sobre el mismo requisito) que compromete la capacidad del SGSI de lograr sus resultados.'],
-['No conformidad menor','Incumplimiento puntual o aislado de un requisito que no compromete la eficacia del SGSI.'],
-['Observación','Situación que podría convertirse en no conformidad si no se atiende, o evidencia insuficiente para concluir.'],
-['Oportunidad de mejora','Sugerencia que excede el requisito de la norma. No es obligatoria.'],
-['Conforme','Se verificó evidencia suficiente y el requisito se cumple.']
+/* ===== Criterios oficiales de la empresa (Formulario FOR-SGC-004, hojas «Tipo de No Conformidad» y «Redacción») ===== */
+const DEF_NC={
+ mayor:{
+  def:'Es una falla grave del Sistema de Gestión que afecta su capacidad para cumplir consistentemente con los requisitos del cliente y de la norma.',
+  cuando:['Incumplimiento total de un requisito de la norma.','Existe una falla sistemática o generalizada en un proceso.','Se evidencia que el sistema no es eficaz.','Hay alto riesgo para la calidad del producto o servicio.','Se detectan varias no conformidades menores repetidas sobre el mismo requisito.','No se implementaron acciones correctivas de auditorías anteriores.'],
+  ejemplos:['No existe el proceso de gestión de no conformidades.','No se realiza revisión por la dirección.','El control de documentos es inexistente.','Se entregan productos sin cumplir requisitos críticos del cliente.','No se realiza la evaluación de proveedores.'],
+  impacto:['Impide la certificación o la mantiene en riesgo.','Requiere acción inmediata.','Normalmente exige una auditoría de seguimiento.']},
+ menor:{
+  def:'Es un incumplimiento puntual, que no compromete gravemente la eficacia del sistema, pero debe ser corregido para evitar que se convierta en algo mayor.',
+  cuando:['El sistema está definido, pero no se cumple en un caso aislado.','Existe un error puntual de implementación.','Hay una desviación sin impacto significativo en el producto o servicio.','Faltan algunos registros evidenciales, pero el proceso sí existe.'],
+  ejemplos:['Un registro sin firma.','Un formato mal completado.','Un procedimiento vigente con un pequeño error.','Un colaborador que no sigue el procedimiento en una ocasión.'],
+  impacto:['No impide la certificación si se corrige.','Se revisa en la siguiente auditoría.','Requiere acción correctiva, pero sin urgencia crítica.']}
+};
+const DEF_CLASE=[
+ ['Punto fuerte / buena práctica','Actividades que generan valor al cumplimiento de la normativa.'],
+ ['Oportunidad de mejora','Iniciativas para aumentar la capacidad del proceso, en las cuales la medida de adopción es opcional: el área responsable decide si la trabaja o no. Implica que el requisito se cumple, pero existe una forma de fortalecer el proceso.'],
+ ['Observación','Riesgo potencial de incumplimiento de un requisito. Existe una situación que podría generar un problema, pero no se ha demostrado incumplimiento. No debe afirmar un incumplimiento.'],
+ ['No conformidad','Incumplimiento de un requisito. Existe incumplimiento demostrado.']
 ];
+const REDACCION={
+ ncmayor:{n:'No conformidad',est:'Requisito → Evidencia → Brecha → Conclusión',plantilla:'En [documento / procedimiento / requisito], se establece que [criterio]. No obstante, durante la auditoría se evidenció que [situación encontrada]. Además de lo anterior, [evidencia adicional, si aplica]. Con base en la evidencia/muestra revisada, no se logra asegurar que [conclusión sobre el incumplimiento].',ejemplo:'En el Procedimiento de Gestión de Proveedores se establece que los proveedores deben ser evaluados anualmente. No obstante, durante la auditoría se evidenció que, de una muestra de 10 proveedores seleccionados, 3 no contaban con evidencia de evaluación correspondiente al período auditado. Además de lo anterior, no se mostró evidencia que permitiera demostrar el seguimiento a los resultados de las evaluaciones realizadas. Con base en la muestra revisada, no se logra asegurar que en todos los casos se esté cumpliendo con lo dispuesto por la organización para la evaluación y seguimiento de proveedores.',resumen:'Se establece X, pero se evidenció Y; por tanto, no se logra asegurar Z.'},
+ obs:{n:'Observación',est:'Situación → Riesgo / aspecto a considerar',plantilla:'Durante la auditoría se evidenció que [situación encontrada]. Esta situación podría [riesgo o consecuencia potencial]. Por lo anterior, se considera pertinente dar seguimiento a este aspecto.',ejemplo:'Durante la auditoría se evidenció que el seguimiento de determinadas actividades depende de registros realizados manualmente por un único colaborador. Esta situación podría generar riesgos de pérdida de trazabilidad o retrasos en la actualización de la información ante la ausencia del responsable. Por lo anterior, se considera pertinente dar seguimiento a este aspecto.',resumen:'Se evidenció X, lo cual podría generar Y.'},
+ om:{n:'Oportunidad de mejora',est:'Situación actual → Posibilidad de mejora → Beneficio esperado',plantilla:'Durante la auditoría se evidenció que [situación actual que cumple con el requisito]. No obstante, se identifica una oportunidad para [posibilidad de mejora], con el propósito de [beneficio esperado].',ejemplo:'Durante la auditoría se evidenció que la organización realiza el seguimiento de los indicadores de los procesos mediante diferentes archivos de Excel. No obstante, se identifica una oportunidad para integrar esta información en un único mecanismo de seguimiento, con el propósito de facilitar la consulta, análisis y toma de decisiones sobre el desempeño de los procesos.',resumen:'Se evidenció X y cumple, pero podría fortalecerse mediante Y para lograr Z.'},
+ fortaleza:{n:'Punto fuerte',est:'Práctica destacada → Evidencia → Beneficio',plantilla:'Se evidenció como punto fuerte que [práctica destacada], mediante [evidencia]. Esta práctica contribuye a [beneficio o resultado positivo].',ejemplo:'Se evidenció como punto fuerte la utilización de una plataforma para el seguimiento de los proyectos, mediante la cual se mantiene actualizada la información sobre actividades, responsables, avances y fechas de cumplimiento. Esta práctica contribuye a fortalecer la trazabilidad y el seguimiento oportuno del desempeño de los proyectos.',resumen:'Se evidenció X, mediante Y, lo cual contribuye a Z.'}
+};
