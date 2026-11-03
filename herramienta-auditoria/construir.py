@@ -1,0 +1,16 @@
+#!/usr/bin/env python3
+"""Une los archivos de /src en un solo HTML que funciona sin internet."""
+import pathlib
+
+base = pathlib.Path(__file__).parent
+src = base / "src"
+js = "\n".join(
+    (src / nombre).read_text(encoding="utf-8")
+    for nombre in ["datos-norma.js", "datos-sesiones.js", "datos-guias.js", "app.js"]
+)
+html = (src / "plantilla.html").read_text(encoding="utf-8")
+html = html.replace("/*CSS*/", (src / "estilo.css").read_text(encoding="utf-8"))
+html = html.replace("/*JS*/", js.replace("</script", "<\\/script"))
+salida = base / "Guia-Auditoria-ISO27001.html"
+salida.write_text(html, encoding="utf-8")
+print("Generado:", salida, "(%d KB)" % (salida.stat().st_size / 1024))
