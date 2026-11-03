@@ -8,6 +8,23 @@ Herramienta de apoyo para el auditor Alan Montilla. Se basa en:
 - los formatos de la empresa: Formulario de hallazgos FOR-SGC-004, Retroalimentación diaria al
   auditado y Lista de verificación FOR-SGI-10.
 
+## Novedades v4.0: documentos y análisis
+
+- **Documentos**: adjunte Word, Excel, PDF, CSV o texto (arrastrando o con «Adjuntar») desde la pestaña
+  *Documentos*, desde una sesión (documentos que conviene revisar) o desde una pregunta.
+- **Análisis local**: detecta el tipo de documento, revisa el control documental (código, versión, fechas,
+  aprobador, cambios sin aceptar, textos de plantilla), los elementos esperados con citas, tablas
+  (responsables, fechas vencidas, estados) y la estructura del SoA; emite conclusiones, preguntas para
+  el auditado y, si usted quiere, **borradores de hallazgos** (observación, oportunidad de mejora o punto
+  fuerte; nunca una no conformidad: eso lo decide el auditor).
+- **Límites**: es una revisión por búsqueda de términos, sin inteligencia artificial ni comprensión del
+  sentido; no lee imágenes ni PDF escaneados (sin OCR). Sus conclusiones son una ayuda, no un dictamen.
+- **Privacidad**: los documentos nunca salen del dispositivo. El respaldo (Más → Datos) guarda análisis y
+  metadatos, **no** los archivos originales ni su texto.
+- **Doble copia**: el trabajo se guarda en dos lugares del navegador y se recupera automáticamente si uno falla.
+- Interfaz renovada: 5 secciones (Hoy, Documentos, Hallazgos, Formatos, Más), modo enfoque con atajos
+  de teclado (1-4, flechas), «Deshacer» en eliminaciones, presentación inicial y página de Ayuda.
+
 ## Cómo usarla
 
 1. Abra **`Guia-Auditoria-ISO27001.html`** con Chrome, Edge o Safari (doble clic). No necesita
