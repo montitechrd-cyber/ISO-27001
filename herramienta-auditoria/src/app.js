@@ -1,9 +1,13 @@
 /* ===== APLICACIÓN ===== */
 'use strict';
 const KEY='ga27001-sgjm-v1';
+const VERSION='3.1',BUILD='/*BUILD*/';
 const $=(s,r=document)=>r.querySelector(s);
 const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* Cualquier error inesperado se avisa en pantalla en lugar de fallar en silencio */
+window.addEventListener('error',e=>{try{toast('Ocurrió un error: '+(e.message||'desconocido')+'. Descargue un respaldo (Más → Datos) y recargue la página.');}catch(x){}});
 
 /* ---------- Estado persistente ---------- */
 let storageOK=true;
@@ -121,11 +125,11 @@ function descargarBlob(nombre,blob){
 }
 const descargar=(nombre,contenido,tipo)=>descargarBlob(nombre,new Blob([contenido],{type:tipo}));
 const MIME={xlsx:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',docx:'application/vnd.openxmlformats-officedocument.wordprocessingml.document',zip:'application/zip'};
-const csvCell=v=>'"'+String(v==null?'':v).replace(/"/g,'""').replace(/\r?\n/g,' ')+'"';
+const csvCell=v=>{let s=String(v==null?'':v).replace(/\r?\n/g,' ');if(/^[=+@]|^-[\d(]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"';};
 const slug=s=>String(s).normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^A-Za-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,40);
 
 /* ---------- Router ---------- */
-let tabSes='preparar',filtroQ='todas',filtroSoA='pend',filtroH='todos',filtroCob='todos',tabBib='clausulas',busqueda='',filtroLV='4';
+let tabNext=null,tabSes='preparar',filtroQ='todas',filtroSoA='pend',filtroH='todos',filtroCob='todos',tabBib='clausulas',busqueda='',filtroLV='4';
 function ruta(){const h=location.hash.replace(/^#\/?/,'')||'plan';const p=h.split('/');return {v:p[0],a:decodeURIComponent(p[1]||'')};}
 function render(){
   const r=ruta();
@@ -135,7 +139,7 @@ function render(){
   $$('nav.main a').forEach(a=>a.classList.toggle('on',a.dataset.v===grupo));
   avisoStorage();
 }
-window.addEventListener('hashchange',()=>{$$('.modal').forEach(m=>m.remove());tabSes='preparar';filtroQ='todas';window.scrollTo(0,0);render();});
+window.addEventListener('hashchange',()=>{$$('.modal').forEach(m=>m.remove());tabSes=tabNext||'preparar';tabNext=null;filtroQ='todas';window.scrollTo(0,0);render();});
 
 /* ---------- Datos por sesión (para los formatos) ---------- */
 const hIso=h=>{const [a,b]=h.split(':');return a.padStart(2,'0')+':'+b;};
@@ -176,6 +180,7 @@ function hallTexto(h){
 }
 function calidadH(h){
   const f=[],t=h.tipo,txt=[h.sit,h.riesgo,h.mejora,h.criterio,h.concl].join(' ');
+  if(!h.ses)f.push('Asigne la sesión / proceso: sin ella el hallazgo no saldrá en ningún formulario');
   if(!acapite(h))f.push('Indique el requisito (cláusula o control) o el documento interno (columna «Acápite / Documento»)');
   if(esNC(t)){
     if(lim(h.criterio).length<10)f.push('Falta el CRITERIO: qué establece el requisito o el procedimiento («se establece que…»)');
@@ -204,6 +209,10 @@ function calidadH(h){
   return f;
 }
 function resumenH(h){return lim(esNC(h.tipo)||h.tipo==='obs'||h.tipo==='om'?h.sit:h.practica)||hallTexto(h);}
+function sesionSugerida(ref){
+  const c=SESIONES.filter(esFormato);
+  return (c.find(s=>!s.soa&&s.cubreSet.has(ref))||c.find(s=>!s.soa&&QS[s.id].some(q=>q.ref.includes(ref)))||c.find(s=>s.soa&&s.cubreSet.has(ref))||{}).id||'';
+}
 function nuevoH(opts){
   opts=opts||{};S.cnt++;const id='H-'+String(S.cnt).padStart(3,'0');
   const q=opts.qid?QBYID[opts.qid]:null;const r=q?R(q.id):null;
@@ -366,7 +375,8 @@ function sPreguntar(s,g){
   if(!esCheck(s))h+='<div class="filters">'+[['todas','Todas'],['pend','Pendientes'],['hecha','Respondidas']].map(x=>'<button class="'+(filtroQ===x[0]?'on':'')+'" data-a="fq" data-f="'+x[0]+'">'+x[1]+'</button>').join('')+'</div>';
   const filt=esCheck(s)||filtroQ==='todas'?(()=>true):filtroQ==='pend'?(q=>R(q.id).s==='pendiente'):(q=>R(q.id).s!=='pendiente');
   h+=base.filter(filt).map(q=>cardQ(q)).join('')||'<p class="mut">No hay preguntas en este filtro.</p>';
-  if(tr.length)h+='<details class="card" '+(tr.some(q=>R(q.id).s!=='pendiente')?'open':'')+'><summary>Preguntas transversales (para cualquier entrevistado, '+tr.length+')</summary><p class="small mut">Úselas con 1 o 2 personas de este proceso. Cubren política, objetivos, capacitación, reporte de incidentes.</p>'+tr.map(q=>cardQ(q)).join('')+'</details>';
+  const trf=tr.filter(filt);
+  if(trf.length)h+='<details class="card" '+(tr.some(q=>R(q.id).s!=='pendiente')?'open':'')+'><summary>Preguntas transversales (para cualquier entrevistado, '+trf.length+')</summary><p class="small mut">Úselas con 1 o 2 personas de este proceso. Cubren política, objetivos, capacitación, reporte de incidentes.</p>'+trf.map(q=>cardQ(q)).join('')+'</details>';
   return h;
 }
 function sSoA(s,g){
@@ -516,8 +526,10 @@ function avisosFormato(ses){
 function vFormatos(){
   const ses=SESIONES.filter(esFormato);
   const dias=Array.from(new Set(ses.map(s=>s.dia)));
+  const huer=S.hall.filter(x=>!x.ses||!SES[x.ses]||!esFormato(SES[x.ses]));
   let h='<div class="wrap"><h1>Formatos oficiales</h1><p class="mut small">Se llenan las plantillas reales de la empresa con lo que usted registra: <b>Formulario de hallazgos de auditoría interna (FOR-SGC-004)</b> y <b>Retroalimentación diaria al auditado</b>. Se generan en su dispositivo; nada se envía a internet.</p>';
   h+='<div class="card soft small"><b>Flujo recomendado:</b> 1) responda las preguntas, 2) convierta lo relevante en hallazgos y valídelos con el auditado, 3) al cerrar la sesión genere la retroalimentación y pida la firma, 4) al finalizar genere el formulario.</div>';
+  if(huer.length)h+='<div class="card bad small"><b>'+huer.length+' hallazgo(s) sin sesión asignada</b> no saldrán en ningún formulario: '+huer.map(x=>'<a href="#/hallazgo/'+x.id+'">'+x.id+'</a>').join(', ')+'. Ábralos y elija la sesión.</div>';
   h+='<div class="row noprint" style="margin-bottom:12px"><button class="primary" data-a="genall">Generar TODO el período (.zip)</button></div>';
   dias.forEach(dia=>{
     h+='<div class="day"><b>'+DIA_NOMBRE[dia]+' de noviembre</b><span class="sp"></span><button class="sm" data-a="genday" data-d="'+dia+'">Descargar el día (.zip)</button></div>';
@@ -554,7 +566,7 @@ function vHallazgo(id){
   const x=S.hall.find(z=>z.id===id);
   if(!x)return '<div class="wrap"><p>Hallazgo no encontrado. <a href="#/hallazgos">Volver</a></p></div>';
   const ops=Object.keys(HTIPOS).map(k=>'<option value="'+k+'" '+(x.tipo===k?'selected':'')+'>'+esc(HTIPOS[k])+'</option>').join('');
-  const sopts=SESIONES.filter(s=>GUIAS[s.guia]&&!esCheck(s)).map(s=>'<option value="'+s.id+'" '+(x.ses===s.id?'selected':'')+'>'+esc(DIA_NOMBRE[s.dia]+' – '+s.nombre)+'</option>').join('');
+  const sopts=SESIONES.filter(esFormato).map(s=>'<option value="'+s.id+'" '+(x.ses===s.id?'selected':'')+'>'+esc(DIA_NOMBRE[s.dia]+' – '+s.nombre)+'</option>').join('');
   const t=x.tipo,rd=REDACCION[esNC(t)?'ncmayor':t];
   let h='<div class="wrap"><p class="small"><a href="#/hallazgos">← Hallazgos</a></p><div class="card"><div class="row"><h1 style="margin:0">'+x.id+'</h1><span id="h-badge">'+badgeH(x.tipo)+'</span></div>';
   h+='<label for="hf-tipo">Clasificación</label><select id="hf-tipo" data-hf="tipo">'+ops+'</select>';
@@ -690,7 +702,7 @@ function redacHTML(){
 
 /* ---------- Más / Datos ---------- */
 function vMas(){
-  return '<div class="wrap"><h1>Más</h1><a class="card ses" href="#/cronograma"><b>Revisión crítica del cronograma</b><br><span class="small mut">Puntos que conviene aclarar con el líder del equipo.</span></a><a class="card ses" href="#/biblioteca"><b>Biblioteca</b><br><span class="small mut">Cláusulas, Anexo A, glosario, método, técnicas, clasificación y redacción.</span></a><a class="card ses" href="#/datos"><b>Datos y respaldo</b><br><span class="small mut">Respaldar, restaurar y exportar a Excel.</span></a></div>';
+  return '<div class="wrap"><h1>Más</h1><a class="card ses" href="#/cronograma"><b>Revisión crítica del cronograma</b><br><span class="small mut">Puntos que conviene aclarar con el líder del equipo.</span></a><a class="card ses" href="#/biblioteca"><b>Biblioteca</b><br><span class="small mut">Cláusulas, Anexo A, glosario, método, técnicas, clasificación y redacción.</span></a><a class="card ses" href="#/datos"><b>Datos y respaldo</b><br><span class="small mut">Respaldar, restaurar y exportar a Excel.</span></a><p class="small mut" style="margin-top:18px">Versión '+VERSION+' · generada el '+esc(BUILD)+'</p></div>';
 }
 function vDatos(){
   const n=Object.values(S.resp).filter(r=>r.s!=='pendiente'||r.n||r.e).length;
@@ -726,7 +738,7 @@ document.addEventListener('click',e=>{
   if(a==='mt'){const id=el.dataset.id;const m=(R(id).m||[]).slice();const i=m.indexOf(el.dataset.m);if(i>=0)m.splice(i,1);else m.push(el.dataset.m);setR(id,{m});refreshQ(id);return;}
   if(a==='lv'){const i=el.dataset.i;const act=(S.lv[i]||{}).s;S.lv[i]=Object.assign({},S.lv[i],{s:act===el.dataset.s?'':el.dataset.s});save();
     const card=el.closest('article.q');if(card)refreshQ(card.dataset.id);else render();return;}
-  if(a==='lvh'){const i=+el.dataset.i;const x=nuevoH({});x.ref=LISTA[i][1];x.tipo='obs';x.sit='';save();location.hash='#/hallazgo/'+x.id;return;}
+  if(a==='lvh'){const i=+el.dataset.i;const sid=sesionSugerida(LISTA[i][1]);const x=nuevoH({ses:sid});x.ref=LISTA[i][1];x.tipo='obs';x.sit='';save();location.hash='#/hallazgo/'+x.id;return;}
   if(a==='flv'){filtroLV=el.dataset.f;render();return;}
   if(a==='tab'){tabSes=el.dataset.t;render();window.scrollTo(0,0);return;}
   if(a==='fq'){filtroQ=el.dataset.f;render();return;}
@@ -741,7 +753,7 @@ document.addEventListener('click',e=>{
   if(a==='delh'){if(confirm('¿Eliminar este hallazgo?')){S.hall=S.hall.filter(z=>z.id!==el.dataset.id);save();location.hash='#/hallazgos';}return;}
   if(a==='adddoc'){const d=SD(SES[el.dataset.id]).docs.slice();d.push({n:'',t:''});setSD(el.dataset.id,{docs:d});render();return;}
   if(a==='deldoc'){const d=SD(SES[el.dataset.id]).docs.slice();d.splice(+el.dataset.i,1);setSD(el.dataset.id,{docs:d});render();return;}
-  if(a==='irc'){e.preventDefault();tabSes='cerrar';location.hash='#/sesion/'+el.dataset.id;setTimeout(()=>{tabSes='cerrar';render();},30);return;}
+  if(a==='irc'){e.preventDefault();const dest='#/sesion/'+el.dataset.id;if(location.hash===dest){tabSes='cerrar';render();}else{tabNext='cerrar';location.hash=dest;}return;}
   if(a==='genx'||a==='genw'||a==='genz'){
     try{const ses=SES[el.dataset.id];const files=generar(ses,a==='genx'?'x':a==='genw'?'w':undefined);bajar(files,'Formatos_'+slug(ses.nombre)+'_'+DIAS[ses.dia]+'.zip');}
     catch(err){alert('No se pudo generar el archivo: '+err.message);}
@@ -751,7 +763,7 @@ document.addEventListener('click',e=>{
   if(a==='print'){window.print();return;}
   if(a==='copiarinf'){const t=informeTexto();(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>toast('Informe copiado')).catch(()=>{const p=$('#inf-prev');const r=document.createRange();r.selectNodeContents(p);const s=getSelection();s.removeAllRanges();s.addRange(r);toast('Seleccionado: use Copiar');});return;}
   if(a==='docinf'){descargar('Informe-Auditoria-ISO27001.doc','<html><head><meta charset="utf-8"></head><body><pre style="font-family:Calibri,Arial;font-size:11pt;white-space:pre-wrap">'+esc(informeTexto())+'</pre></body></html>','application/msword');return;}
-  if(a==='backup'){S.ultimoRespaldo=new Date().toISOString();save();descargar('respaldo-auditoria-'+hoyISO()+'.json',JSON.stringify(S,null,1),'application/json');toast('Respaldo descargado');render();return;}
+  if(a==='backup'){S.ultimoRespaldo=new Date().toISOString();save();descargar('respaldo-auditoria-'+hoyISO()+'.json',JSON.stringify(Object.assign({app:VERSION},S),null,1),'application/json');toast('Respaldo descargado');render();return;}
   if(a==='csvr'){
     const rows=[['Sesión','Id','Requisito(s)','Pregunta','Resultado','Método','Notas','Evidencia vista']];
     SESIONES.forEach(s=>QS[s.id].forEach(q=>{const r=R(q.id);if(r.s!=='pendiente'||r.n||r.e)rows.push([s.nombre,q.id,q.ref.join(' '),q.q,TIPOS[r.s].n,(r.m||[]).map(k=>METODOS.find(m=>m[0]===k)[1]).join('; '),r.n,r.e]);}));
@@ -764,7 +776,8 @@ document.addEventListener('click',e=>{
     const rows=[['Cláusula','Apartado','Cuestión a revisar','Cumplimiento','Comentarios']];
     LISTA.forEach((x,i)=>{const st=S.lv[i]||{};rows.push([x[0],x[2],x[3],st.s==='si'?'Sí':st.s==='no'?'No':st.s==='na'?'N/A':'',st.c||'']);});
     descargar('lista-verificacion-FOR-SGI-10.csv','﻿'+rows.map(r=>r.map(csvCell).join(',')).join('\r\n'),'text/csv;charset=utf-8');return;}
-  if(a==='tema'){const t=el.dataset.t;if(t==='auto')document.documentElement.removeAttribute('data-theme');else document.documentElement.setAttribute('data-theme',t);try{localStorage.setItem(KEY+'-tema',t);}catch(x){}return;}
+  if(a==='tema'){setTema(el.dataset.t);return;}
+  if(a==='tema-toggle'){setTema(temaEfectivo()==='dark'?'light':'dark');return;}
   if(a==='reset'){if(confirm('Se borrarán TODAS las respuestas y hallazgos de este dispositivo. ¿Continuar?')){S=defaults();save();render();toast('Datos borrados');}return;}
 });
 document.addEventListener('change',e=>{
@@ -790,9 +803,25 @@ document.addEventListener('input',e=>{
 });
 document.addEventListener('keydown',e=>{if(e.key==='Escape')$('.modal')?.remove();});
 
+/* ---------- Tema claro / oscuro ---------- */
+const mqDark=window.matchMedia?matchMedia('(prefers-color-scheme: dark)'):null;
+const temaEfectivo=()=>document.documentElement.getAttribute('data-theme')||(mqDark&&mqDark.matches?'dark':'light');
+function pintarTema(){
+  const b=$('#tema-btn');if(!b)return;const osc=temaEfectivo()==='dark';
+  $('.i',b).textContent=osc?'☀️':'🌙';$('.t',b).textContent=osc?'Modo claro':'Modo oscuro';
+  b.setAttribute('aria-label',osc?'Cambiar a modo claro':'Cambiar a modo oscuro');b.title=osc?'Cambiar a modo claro':'Cambiar a modo oscuro';
+}
+function setTema(t){
+  if(t==='auto')document.documentElement.removeAttribute('data-theme');else document.documentElement.setAttribute('data-theme',t);
+  try{localStorage.setItem(KEY+'-tema',t);}catch(e){}
+  pintarTema();
+}
+if(mqDark&&mqDark.addEventListener)mqDark.addEventListener('change',pintarTema);
+
 /* ---------- Arranque ---------- */
 (function(){
   try{const t=localStorage.getItem(KEY+'-tema');if(t&&t!=='auto')document.documentElement.setAttribute('data-theme',t);}catch(e){}
+  pintarTema();
   if(!location.hash)location.hash='#/plan';
   render();
 })();

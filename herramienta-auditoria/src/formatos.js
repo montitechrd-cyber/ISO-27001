@@ -39,6 +39,8 @@ function zipU8(files){
 function plantMap(k){return new Map(PLANTILLAS[k].map(([n,t,x])=>[n,t==='t'?x:b64u8(x)]));}
 const _XMLH='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n';
 const _XNS='http://www.w3.org/XML/1998/namespace';
+/* Quita los caracteres que XML 1.0 no admite (suelen venir al pegar desde Word o PDF) y rompen el archivo */
+const _limpio=s=>String(s==null?'':s).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\uFFFE\uFFFF]/g,'').replace(/[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/g,'');
 const _ser=doc=>_XMLH+new XMLSerializer().serializeToString(doc).replace(/^<\?xml[^>]*\?>\s*/,'');
 
 /* ---------- Formulario de hallazgos (xlsx) ----------
@@ -77,9 +79,9 @@ FM.xlsx=function(d){
     const c=cell(ref);[...c.children].forEach(x=>x.remove());c.removeAttribute('t');
     if(text===''||text==null)return;
     c.setAttribute('t','inlineStr');
-    const is=el('is'),t=el('t');t.setAttributeNS(_XNS,'xml:space','preserve');t.textContent=String(text);
+    const is=el('is'),t=el('t');t.setAttributeNS(_XNS,'xml:space','preserve');t.textContent=_limpio(text);
     is.appendChild(t);c.appendChild(is);
-    if(w!==false){c.setAttribute('s',wrap(+c.getAttribute('s')||0));filled.push([ref,String(text)]);}
+    if(w!==false){c.setAttribute('s',wrap(+c.getAttribute('s')||0));filled.push([ref,_limpio(text)]);}
   }
   const parseRef=r=>{const m=r.match(/^([A-Z]+)(\d+):([A-Z]+)(\d+)$/);return m?{c1:m[1],r1:+m[2],c2:m[3],r2:+m[4]}:null;};
   const merges=()=>[...mcEl.children];
@@ -159,7 +161,7 @@ FM.docx=function(d){
   const doc=dp.parseFromString(P.get('word/document.xml'),'application/xml');
   const all=(n,r)=>[...(r||doc).getElementsByTagNameNS(W,n)];
   const txt=n=>all('t',n).map(t=>t.textContent).join('');
-  const setT=(t,v)=>{t.textContent=v;t.setAttributeNS(_XNS,'xml:space','preserve');};
+  const setT=(t,v)=>{t.textContent=_limpio(v);t.setAttributeNS(_XNS,'xml:space','preserve');};
   const paras=all('p');
   const underscores=p=>all('t',p).filter(t=>/^\s*_{4,}\s*$/.test(t.textContent));
   /* encabezado: Fecha, Proceso/Área, Auditor(es), Auditado/Responsable */

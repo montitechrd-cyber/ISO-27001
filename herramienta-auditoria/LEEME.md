@@ -21,6 +21,7 @@ Herramienta de apoyo para el auditor Alan Montilla. Se basa en:
    diaria (.docx)** por sesión, por día (.zip) o de todo el período (.zip).
 6. **Lista**: la lista de verificación completa (35 cláusulas + 93 controles).
 7. **Cobertura**, **Más** (revisión del cronograma, biblioteca, datos y respaldo).
+8. Botón **Modo claro / Modo oscuro** arriba a la izquierda; recuerda su elección.
 
 ## Confidencialidad
 

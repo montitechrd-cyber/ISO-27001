@@ -260,7 +260,7 @@ const PREP_GENERAL=[
 'Confirmar con el líder del equipo: ¿quién cubre la verificación técnica? ¿qué versión del cronograma es la vigente?',
 'Solicitar con anticipación: SoA, matriz de riesgos, alcance, política, informe de auditoría anterior, plan de tratamiento.',
 'Confirmar el procedimiento interno de auditoría: definiciones de NC mayor/menor, plazos de respuesta, formatos.',
-'Leer (30 min) los apartados de la pestaña «Biblioteca» sobre cláusulas 4, 6 y 9.3 y el glosario.',
+'Leer (30 min) los apartados de «Más → Biblioteca» sobre cláusulas 4, 6 y 9.3, el método y el glosario.',
 'Preparar el equipo: laptop o tablet cargada, copia de la herramienta, formato de lista de asistencia.',
 'Verificar el ámbito legal aplicable al país de la empresa (ley de datos personales) con el Asesor Legal.'
 ];

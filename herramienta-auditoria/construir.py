@@ -10,6 +10,8 @@ js = "\n".join(
 )
 html = (src / "plantilla.html").read_text(encoding="utf-8")
 html = html.replace("/*CSS*/", (src / "estilo.css").read_text(encoding="utf-8"))
+import datetime
+js = js.replace("/*BUILD*/", datetime.datetime.now().strftime("%d/%m/%Y %H:%M"))
 html = html.replace("/*JS*/", js.replace("</script", "<\\/script"))
 salida = base / "Guia-Auditoria-ISO27001.html"
 salida.write_text(html, encoding="utf-8")
