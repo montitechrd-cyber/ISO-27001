@@ -142,6 +142,10 @@ th{font-size:.78rem;text-transform:uppercase;letter-spacing:.03em;color:var(--mu
 .tbl{overflow-x:auto}
 tr.mine td:first-child{box-shadow:inset 4px 0 var(--brand)}
 
+.pre{background:var(--brand-soft);border-radius:8px;padding:8px 10px;font-size:.9rem;margin:4px 0 6px}
+.soa-d{margin:4px 0}
+.soa{border-left:3px solid var(--brand);padding:3px 0 3px 10px;margin:4px 0;font-size:.9rem}
+.soa-h{color:var(--mut);margin-top:4px}
 /* modal */
 .modal{position:fixed;inset:0;background:rgba(10,18,26,.55);z-index:50;display:flex;align-items:flex-end;justify-content:center}
 .modal>div{background:var(--card);width:100%;max-width:640px;max-height:86vh;overflow:auto;border-radius:16px 16px 0 0;padding:18px}
@@ -387,6 +391,104 @@ const DEF_TIPOS = [
 ['Conforme','Se verificó evidencia suficiente y el requisito se cumple.']
 ];
 
+/* ===== DECLARACIÓN DE APLICABILIDAD (SoA) de Soluciones Globales JM, tal como fue recibida =====
+   [aplicabilidad, justificación, estado (imp/par/no), evidencia declarada] */
+const SOA={
+"A.5.1":["Aplica", "Requerido para establecer el marco de gobierno y directrices del SGSI.", "imp", "POLÍTICA DE SEGURIDAD DE LA INFORMACIÓN"],
+"A.5.2":["Aplica", "Requerido para asegurar la rendición de cuentas y correcta asignación de tareas.", "par", "Manual Organizativo y de Funciones /Manual de Puestos"],
+"A.5.3":["Aplica", "Requerido para prevenir conflictos de interés, fraudes o modificaciones no autorizadas.", "par", "PROCEDIMIENTO DE GESTIÓN DE ACCESOS E IDENTIDADES"],
+"A.5.4":["Aplica", "Requerido para garantizar el liderazgo y provisión de recursos por la Alta Dirección.", "imp", "Manual del Sistema Integrado de Gestión"],
+"A.5.5":["Aplica", "Requerido para el escalamiento de incidentes legales (Ley 172-13) o desastres.", "par", "PROCEDIMIENTO DE GESTIÓN DE INCIDENTES DE SEGURIDAD DE LA INFORMACIÓN"],
+"A.5.6":["Aplica", "Requerido para mantener vigilancia tecnológica e inteligencia colaborativa.", "par", "Manual Organizativo y de Funciones"],
+"A.5.7":["Aplica", "Requerido para anticipar ataques y vulnerabilidades de Día Cero.", "par", "PROCEDIMIENTO DE GESTIÓN DE VULNERABILIDADES TÉCNICAS"],
+"A.5.8":["Aplica", "Requerido para aplicar seguridad por diseño desde la concepción de la iniciativa.", "par", "PC-INNO-006 - Proc. Innov. y Planif. de Proy. Desarrollo TI"],
+"A.5.9":["Aplica", "Requerido para identificar, registrar y asignar dueños a los recursos a proteger.", "par", "PROCEDIMIENTO DE GESTIÓN DEL INVENTARIO Y CLASIFICACIÓN DE ACTIVOS DE INFORMACIÓN"],
+"A.5.10":["Aplica", "Requerido para normar el uso ético y seguro de los equipos institucionales por parte del personal.", "par", "PROCEDIMIENTO DE USO ACEPTABLE DE ACTIVOS"],
+"A.5.11":["Aplica", "Requerido para recuperar equipos y datos ante desvinculaciones laborales o fin de contratos.", "par", "PROCEDIMIENTO DE USO ACEPTABLE DE ACTIVOS / PROCEDIMIENTO DE PROVEEDORES"],
+"A.5.12":["Aplica", "Requerido para proteger los datos en función de su nivel de sensibilidad e impacto.", "par", "PROCEDIMIENTO DE GESTIÓN DEL INVENTARIO Y CLASIFICACIÓN DE ACTIVOS DE INFORMACIÓN"],
+"A.5.13":["Aplica", "Requerido para visibilizar el nivel de clasificación y aplicar las reglas de manejo.", "par", "PROCEDIMIENTO DE GESTIÓN DEL INVENTARIO Y CLASIFICACIÓN DE ACTIVOS DE INFORMACIÓN"],
+"A.5.14":["Aplica", "Requerido para proteger los datos en tránsito por canales de comunicación.", "par", "PROCEDIMIENTO DE PROTECCIÓN DE DATOS, CRIPTOGRAFÍA Y TRATAMIENTO SEGURO"],
+"A.5.15":["Aplica", "Requerido para regular estrictamente quién ingresa a los sistemas y áreas.", "par", "PROCEDIMIENTO DE GESTIÓN DE ACCESOS E IDENTIDADES"],
+"A.5.16":["Aplica", "Requerido para el alta, modificación y baja de credenciales de usuario (ciclo de vida).", "par", "PROCEDIMIENTO DE GESTIÓN DE ACCESOS E IDENTIDADES"],
+"A.5.17":["Aplica", "Requerido para gestionar contraseñas fuertes y Autenticación Multifactor (MFA).", "par", "PROCEDIMIENTO DE GESTIÓN DE ACCESOS E IDENTIDADES"],
+"A.5.18":["Aplica", "Requerido para aplicar el principio de mínimo privilegio en los perfiles de usuario.", "par", "PROCEDIMIENTO DE GESTIÓN DE ACCESOS E IDENTIDADES"],
+"A.5.19":["Aplica", "Requerido para mitigar riesgos derivados del uso de terceros que acceden a nuestra información.", "par", "PROCEDIMIENTO DE GESTIÓN DE PROVEEDORES Y SERVICIOS EXTERNOS"],
+"A.5.20":["Aplica", "Requerido para incluir cláusulas de seguridad, derecho a auditoría y NDA en los contratos.", "par", "PROCEDIMIENTO DE GESTIÓN DE PROVEEDORES Y SERVICIOS EXTERNOS"],
+"A.5.21":["Aplica", "Requerido para controlar los riesgos de desarrollo, hardware y software proveído externamente.", "par", "PROCEDIMIENTO DE GESTIÓN DE PROVEEDORES Y SERVICIOS EXTERNOS"],
+"A.5.22":["Aplica", "Requerido para evaluar el cumplimiento de SLA y desempeño de seguridad del proveedor.", "par", "PROCEDIMIENTO DE GESTIÓN DE PROVEEDORES Y SERVICIOS EXTERNOS"],
+"A.5.23":["Aplica", "Requerido para asegurar entornos Cloud / SaaS mediante configuraciones y contratos seguros.", "par", "PROCEDIMIENTO DE SEGURIDAD DE REDES Y COMUNICACIONES / PROCEDIMIENTO DE PROVEEDORES"],
+"A.5.24":["Aplica", "Requerido para definir roles, responsabilidades y canales ante posibles brechas de seguridad.", "par", "PROCEDIMIENTO DE GESTIÓN DE INCIDENTES DE SEGURIDAD DE LA INFORMACIÓN"],
+"A.5.25":["Aplica", "Requerido para realizar el Triage inicial y decidir el nivel de escalamiento del incidente.", "par", "PROCEDIMIENTO DE GESTIÓN DE INCIDENTES DE SEGURIDAD DE LA INFORMACIÓN"],
+"A.5.26":["Aplica", "Requerido para la contención técnica inmediata y erradicación de las amenazas.", "par", "PROCEDIMIENTO DE GESTIÓN DE INCIDENTES DE SEGURIDAD DE LA INFORMACIÓN"],
+"A.5.27":["Aplica", "Requerido para aplicar el análisis de causa raíz y prevenir recurrencias (Lecciones aprendidas).", "par", "PROCEDIMIENTO DE GESTIÓN DE INCIDENTES DE SEGURIDAD DE LA INFORMACIÓN"],
+"A.5.28":["Aplica", "Requerido para resguardar la trazabilidad forense antes de alterar equipos comprometidos.", "par", "PROCEDIMIENTO DE GESTIÓN DE INCIDENTES DE SEGURIDAD DE LA INFORMACIÓN"],
+"A.5.29":["Aplica", "Requerido para asegurar que no se apaguen controles críticos durante una emergencia (BCP).", "no", "Continuidad de Negocios"],
+"A.5.30":["Aplica", "Requerido para restaurar sistemas cumpliendo con el RTO/RPO establecido en el BIA.", "no", "Continuidad de Negocios"],
+"A.5.31":["Aplica", "Requerido para garantizar cumplimiento de la Ley 172-13 y regulaciones locales.", "par", "Matriz de cumplimiento de requisitos legales"],
+"A.5.32":["Aplica", "Requerido para prohibir el uso de software pirata y proteger la propiedad intelectual.", "par", "PROCEDIMIENTO DE USO ACEPTABLE DE ACTIVOS"],
+"A.5.33":["Aplica", "Requerido para garantizar la integridad y retención de evidencias de auditoría.", "par", "Manual del Sistema Integrado de Gestión"],
+"A.5.34":["Aplica", "Requerido para proteger datos personales de clientes y empleados, cumpliendo leyes de privacidad.", "par", "PROCEDIMIENTO DE PROTECCIÓN DE DATOS, CRIPTOGRAFÍA Y TRATAMIENTO SEGURO"],
+"A.5.35":["Aplica", "Requerido para verificar de forma imparcial la eficacia del SGSI mediante auditorías internas.", "par", "Manual del Sistema Integrado de Gestión"],
+"A.5.36":["Aplica", "Requerido para asegurar que los procesos se adhieren a las reglas operativas aprobadas.", "par", "Manual de Puestos"],
+"A.5.37":["Aplica", "Requerido para estandarizar la ejecución técnica mediante procesos documentados y vigentes.", "par", "Manual del Sistema Integrado de Gestión"],
+"A.6.1":["Aplica", "Requerido para validar antecedentes de los colaboradores antes de la contratación.", "par", "Manual de Puestos"],
+"A.6.2":["Aplica", "Requerido para incluir responsabilidades de seguridad y confidencialidad en los contratos.", "no", ""],
+"A.6.3":["Aplica", "Requerido para capacitar al personal sobre cómo identificar amenazas (Phishing, malware).", "imp", "Plan Anual de Capacitación, Procedimiento de capacitacion, evidencias de capacitacion, campaña sobre pishing"],
+"A.6.4":["Aplica", "Requerido para accionar formalmente ante violaciones intencionales a la seguridad de información.", "par", "Código de Ética"],
+"A.6.5":["Aplica", "Requerido para ejecutar la revocación inmediata (24h) de credenciales ante cese laboral.", "par", "PROCEDIMIENTO DE GESTIÓN DE ACCESOS E IDENTIDADES"],
+"A.6.6":["Aplica", "Requerido para resguardar legalmente los datos mediante NDA firmados por empleados/terceros.", "par", "PROCEDIMIENTO DE GESTIÓN DE PROVEEDORES Y SERVICIOS EXTERNOS"],
+"A.6.7":["Aplica", "Requerido para asegurar conexiones y equipos de colaboradores en esquema de teletrabajo.", "par", "PROCEDIMIENTO DE DISPOSITIVOS MÓVILES Y TRABAJO REMOTO"],
+"A.6.8":["Aplica", "Requerido para que cualquier usuario alerte rápidamente a Soporte TI sobre sospechas o fallos.", "par", "PROCEDIMIENTO DE GESTIÓN DE INCIDENTES DE SEGURIDAD DE LA INFORMACIÓN"],
+"A.7.1":["Aplica", "Requerido para establecer barreras de acceso a las instalaciones generales de la empresa.", "par", "PROCEDIMIENTO DE SEGURIDAD FÍSICA Y AMBIENTAL"],
+"A.7.2":["Aplica", "Requerido para el registro de visitantes y control electrónico en puertas principales.", "par", "PROCEDIMIENTO DE SEGURIDAD FÍSICA Y AMBIENTAL"],
+"A.7.3":["Aplica", "Requerido para proteger áreas departamentales internas contra intrusiones.", "par", "PROCEDIMIENTO DE SEGURIDAD FÍSICA Y AMBIENTAL"],
+"A.7.4":["Aplica", "Requerido para operar el sistema CCTV y mantener vigilancia 24/7 de las instalaciones.", "par", "PROCEDIMIENTO DE SEGURIDAD FÍSICA Y AMBIENTAL"],
+"A.7.5":["Aplica", "Requerido para prevenir incendios, fallas de clima o inundaciones en áreas de procesamiento.", "par", "PROCEDIMIENTO DE SEGURIDAD FÍSICA Y AMBIENTAL"],
+"A.7.6":["Aplica", "Requerido para restringir severamente el ingreso al Cuarto de Servidores (Data Center).", "par", "PROCEDIMIENTO DE SEGURIDAD FÍSICA Y AMBIENTAL"],
+"A.7.7":["Aplica", "Requerido para evitar el compromiso de información sensible por exposición visual o documental.", "par", "PROCEDIMIENTO DE USO ACEPTABLE DE ACTIVOS / PROCEDIMIENTO DE SEGURIDAD FÍSICA"],
+"A.7.8":["Aplica", "Requerido para ubicar hardware crítico fuera de zonas de alto riesgo ambiental o de tráfico.", "par", "PROCEDIMIENTO DE SEGURIDAD FÍSICA Y AMBIENTAL"],
+"A.7.9":["Aplica", "Requerido para proteger laptops corporativas usadas en la vía pública o en casa.", "par", "PROCEDIMIENTO DE DISPOSITIVOS MÓVILES Y TRABAJO REMOTO"],
+"A.7.10":["Aplica", "Requerido para controlar la asignación, resguardo y destrucción de discos y memorias.", "par", "PROCEDIMIENTO DE GESTIÓN DEL INVENTARIO Y CLASIFICACIÓN DE ACTIVOS"],
+"A.7.11":["Aplica", "Requerido para proteger la operación eléctrica (UPS) y enlaces de internet críticos.", "par", "PROCEDIMIENTO DE SEGURIDAD FÍSICA Y AMBIENTAL"],
+"A.7.12":["Aplica", "Requerido para evitar desconexiones accidentales o intercepciones de red física.", "par", "PROCEDIMIENTO DE SEGURIDAD FÍSICA Y AMBIENTAL"],
+"A.7.13":["Aplica", "Requerido para prevenir fallas prolongadas de servidores o sistemas de clima (AC).", "par", "PROCEDIMIENTO DE SEGURIDAD FÍSICA Y AMBIENTAL"],
+"A.7.14":["Aplica", "Requerido para exigir el borrado a bajo nivel del disco antes de desechar o reasignar una PC.", "par", "PROCEDIMIENTO DE GESTIÓN DEL INVENTARIO Y CLASIFICACIÓN DE ACTIVOS"],
+"A.8.1":["Aplica", "Requerido para asegurar las laptops/PCs con antivirus, cifrado y bloqueo automático.", "par", "PROCEDIMIENTO DE USO ACEPTABLE DE ACTIVOS"],
+"A.8.2":["Aplica", "Requerido para limitar cuentas de Administrador a personal estrictamente necesario.", "par", "PROCEDIMIENTO DE GESTIÓN DE ACCESOS E IDENTIDADES"],
+"A.8.3":["Aplica", "Requerido para usar RBAC y evitar que un usuario vea datos de otros departamentos.", "par", "PROCEDIMIENTO DE GESTIÓN DE ACCESOS E IDENTIDADES"],
+"A.8.4":["Aplica", "Requerido para proteger el repositorio de desarrollo y prevenir fugas de propiedad intelectual.", "par", "PC-INNO-003 - Procedimiento de Desarrollo de Solución TI"],
+"A.8.5":["Aplica", "Requerido para exigir el uso de Autenticación Multifactor (MFA) en accesos clave.", "par", "PROCEDIMIENTO DE GESTIÓN DE ACCESOS E IDENTIDADES"],
+"A.8.6":["Aplica", "Requerido para monitorizar CPU/RAM/Disco y evitar caídas por saturación del sistema.", "par", "PROCEDIMIENTO DE GESTIÓN DE LA CAPACIDAD"],
+"A.8.7":["Aplica", "Requerido para la implementación y monitoreo continuo de EDR / Antivirus en la infraestructura.", "par", "PROCEDIMIENTO DE USO ACEPTABLE DE ACTIVOS"],
+"A.8.8":["Aplica", "Requerido para programar parches, escaneos y cerrar brechas (Zero-Day) oportunamente.", "par", "PROCEDIMIENTO DE GESTIÓN DE VULNERABILIDADES TÉCNICAS"],
+"A.8.9":["Aplica", "Requerido para aplicar Hardening (líneas base seguras) y eliminar configuraciones de fábrica.", "par", "PROCEDIMIENTO DE GESTIÓN DE CONFIGURACIONES SEGURAS"],
+"A.8.10":["Aplica", "Requerido para borrar datos confidenciales de sistemas cuando termina su ciclo de vida legal.", "par", "PROCEDIMIENTO DE PROTECCIÓN DE DATOS, CRIPTOGRAFÍA Y TRATAMIENTO SEGURO"],
+"A.8.11":["Aplica", "Requerido para ofuscar información personal en bases de datos usadas para desarrollo/pruebas.", "par", "PROCEDIMIENTO DE PROTECCIÓN DE DATOS, CRIPTOGRAFÍA Y TRATAMIENTO SEGURO"],
+"A.8.12":["Aplica", "Requerido para implementar políticas \"Deny All\" y controles DLP para evitar extracción de datos.", "par", "PROCEDIMIENTO DE PROTECCIÓN DE DATOS, CRIPTOGRAFÍA Y TRATAMIENTO SEGURO"],
+"A.8.13":["Aplica", "Requerido para garantizar la recuperación ante secuestros de datos (Ransomware) o fallas.", "par", "PROCEDIMIENTO DE COPIAS DE SEGURIDAD (BACKUP)"],
+"A.8.14":["Aplica", "Requerido para mantener alta disponibilidad en servicios tecnológicos críticos.", "no", ""],
+"A.8.15":["Aplica", "Requerido para asegurar trazabilidad de acciones, errores y modificaciones de administradores.", "par", "PROCEDIMIENTO DE MONITORIZACIÓN Y GESTIÓN DE LOGS"],
+"A.8.16":["Aplica", "Requerido para detectar comportamientos anómalos o intentos de ataques en las redes.", "par", "PROCEDIMIENTO DE MONITORIZACIÓN Y GESTIÓN DE LOGS"],
+"A.8.17":["Aplica", "Requerido para asegurar que los Logs (NTP) sirvan como evidencia forense legalmente válida.", "par", "PROCEDIMIENTO DE MONITORIZACIÓN Y GESTIÓN DE LOGS"],
+"A.8.18":["Aplica", "Requerido para limitar la ejecución de scripts o herramientas administrativas de sistema.", "par", "PROCEDIMIENTO DE GESTIÓN DE ACCESOS E IDENTIDADES"],
+"A.8.19":["Aplica", "Requerido para prohibir instalaciones no validadas que puedan comprometer servidores.", "par", "PROCEDIMIENTO DE USO ACEPTABLE DE ACTIVOS"],
+"A.8.20":["Aplica", "Requerido para proteger la frontera corporativa mediante Firewalls perimetrales y monitoreo.", "par", "PROCEDIMIENTO DE SEGURIDAD DE REDES Y COMUNICACIONES"],
+"A.8.21":["Aplica", "Requerido para garantizar la integridad de enlaces proporcionados por ISPs externos.", "par", "PROCEDIMIENTO DE SEGURIDAD DE REDES Y COMUNICACIONES"],
+"A.8.22":["Aplica", "Requerido para utilizar VLANs que aíslen servidores críticos, empleados e invitados.", "par", "PROCEDIMIENTO DE SEGURIDAD DE REDES Y COMUNICACIONES"],
+"A.8.23":["Aplica", "Requerido para bloquear navegación a sitios de distribución de malware o prohibidos.", "par", "PROCEDIMIENTO DE SEGURIDAD DE REDES Y COMUNICACIONES"],
+"A.8.24":["Aplica", "Requerido para el cifrado obligatorio de discos duros y transmisiones de datos sensibles.", "par", "PROCEDIMIENTO DE PROTECCIÓN DE DATOS, CRIPTOGRAFÍA Y TRATAMIENTO SEGURO"],
+"A.8.25":["Aplica", "Requerido para aplicar metodología DevSecOps en la construcción de software interno o comercial.", "par", "PC-INNO-003 - Procedimiento de Desarrollo de Solución TI"],
+"A.8.26":["Aplica", "Requerido para integrar directrices de seguridad desde el inicio del levantamiento del proyecto.", "par", "PC-INNO-002 - Procedimiento de Análisis de Req. TI"],
+"A.8.27":["Aplica", "Requerido para diseñar plataformas escalables y robustas antes de escribir el código.", "par", "PC-INNO-004 - Procedimiento de Diseño de Software"],
+"A.8.28":["Aplica", "Requerido para utilizar guías OWASP y validaciones SAST durante la construcción del código.", "par", "PC-INNO-003 - Procedimiento de Desarrollo de Solución TI"],
+"A.8.29":["Aplica", "Requerido para descubrir fallas y realizar QA riguroso previo al paso a entorno de producción.", "par", "PC-INNO-005 - Procedimiento de Prueba de Solución TI"],
+"A.8.30":["Aplica", "Requerido para forzar a desarrolladores tercerizados a cumplir con las normas de código seguro.", "par", "PC-INNO-003 - Procedimiento de Desarrollo de Solución TI"],
+"A.8.31":["Aplica", "Requerido para impedir que los programadores alteren directamente las bases de producción.", "par", "PC-INNO-003 - Procedimiento de Desarrollo de Solución TI"],
+"A.8.32":["Aplica", "Requerido para que todo pase a producción cuente con un ticket, evaluación y plan rollback.", "no", ""],
+"A.8.33":["Aplica", "Requerido para utilizar información sintética en fase de QA sin exponer registros reales del cliente.", "par", "PC-INNO-005 - Procedimiento de Prueba de Solución TI"],
+"A.8.34":["Aplica", "Requerido para planificar escaneos o pruebas de estrés sin interrumpir la operación del negocio.", "no", ""],
+};
+
 /* ===== CRONOGRAMA (extraído de la matriz Excel) ===== */
 const MJ='Melinton Jiménez', AM='Alan Montilla', MV='Madeline Javier';
 const EQUIPO=[MJ,AM,MV];
@@ -451,7 +553,14 @@ const REVISION=[
 {sev:'media',t:'La sesión de RRHH cita A.6.1-A.6.7 y omite A.6.8',d:'A.6.8 es la notificación de eventos de seguridad, el control que sostiene toda la gestión de incidentes.',a:'Cúbralo con las preguntas transversales y avise a Melinton.',s:['rrhh']},
 {sev:'baja',t:'Gestión Financiera solo cubre 7.1 y ningún control del Anexo A',d:'Finanzas maneja información crítica (A.5.33 protección de registros, A.5.3 segregación de funciones, accesos a banca en línea).',a:'Coordínese con Melinton para que valide segregación de funciones y accesos a sistemas financieros.',s:['financiera']},
 {sev:'baja',t:'Comercial (Ventas): 7 roles en 2,5 horas',d:'Unos 20 minutos por perfil si se quiere ver a todos.',a:'Defina antes una muestra: Presidente, Gte Comercial, 2 vendedores al azar y Soporte de Ventas.',s:['ventas']},
-{sev:'baja',t:'Independencia (revisar)',d:'Para auditoría interna, ISO 27001 9.2 y 19011 exigen objetividad e imparcialidad: los auditores no deben auditar su propio trabajo. El Excel no dice a qué área pertenecen los tres auditores.',a:'Verifique que ninguno audite un proceso que opera o dirige. Si hay conflicto, déjelo declarado en el plan.',s:[]}
+/* --- Lo que revelan el SoA y la matriz de entregables (g:'archivos') --- */
+{g:'archivos',sev:'alta',t:'Su propio SoA declara que solo 3 de 93 controles están implementados',d:'Los 93 controles figuran como «Aplica». Estado declarado: 3 Implementado (A.5.1, A.5.4, A.6.3), 84 Parcialmente implementado y 6 No implementado (A.5.29, A.5.30, A.6.2, A.8.14, A.8.32, A.8.34). Si audita control por control, puede terminar con decenas de no conformidades que en realidad son una sola causa: el plan de tratamiento no está ejecutado.',a:'Antes de la apertura acuerde con el líder del equipo y deje por escrito el criterio: (a) declarado «Implementado» y no se sostiene → no conformidad (declaración inexacta); (b) declarado «Parcial» o «No implementado» con plan vigente, responsable y fecha → verifique el plan y su avance; la no conformidad es del sistema (6.1.3, 8.3, 9.1), no de cada control; (c) plan vencido, sin dueño o sin aceptación del riesgo residual → no conformidad. Es una propuesta mía: confírmela con el líder y con el procedimiento interno de auditoría.',s:['soa','planificacion']},
+{g:'archivos',sev:'alta',t:'Hubo una revisión del SoA por un consultor (20 jul – 14 ago 2026) y sus entregables son su mejor insumo',d:'La matriz de entregables describe 6 revisiones semanales por grupos de controles (organizacionales 1 y 2, personas, físicos, tecnológicos 1 y 2). Cada una debía producir un «Reporte de cumplimiento Matriz SoA / plan de acción» con procedimientos revisados, evidencias existentes y faltantes, recomendaciones, acciones pendientes y porcentaje de cumplimiento. Valida 7 atributos por control: responsable, procedimiento, evidencia, registro, riesgo asociado, declaración en el SoA y estado.',a:'Pida los 6 reportes y los planes de acción. Pregunte: ¿el SoA que me entregaron es anterior o posterior a esa revisión? ¿cuántas acciones se cerraron desde agosto? Use los 7 atributos como plantilla mental de cada control. Esos reportes no los he visto: lo que sé de ellos es solo lo que dice la matriz.',s:['planificacion','soa']},
+{g:'archivos',sev:'media',t:'El SoA no muestra versión, fecha, elaborador ni aprobador',d:'En el archivo recibido el encabezado solo tiene el título. ISO 27001 exige información documentada controlada (7.5.2) y la SoA es un documento obligatorio (6.1.3 d). Puede que esos datos estén en otra hoja, en el pie o en el sistema documental.',a:'Pregunte por la versión vigente y quién la aprobó. Si realmente no existe, es observación o NC menor según el criterio de la empresa.',s:['planificacion','soa']},
+{g:'archivos',sev:'media',t:'Las justificaciones del SoA son genéricas y casi no mencionan riesgo',d:'Las 93 justificaciones empiezan con «Requerido para…» y solo 3 mencionan la palabra riesgo. Describen para qué sirve el control, no por qué se necesita a partir de la evaluación de riesgos (6.1.3). Tampoco hay columna de riesgo asociado, responsable ni fecha.',a:'Pida la matriz de riesgos y rastree 3 controles hacia el riesgo que los origina. Si no hay trazabilidad, es hallazgo en 6.1.3.',s:['planificacion','soa']},
+{g:'archivos',sev:'media',t:'La «evidencia» del SoA son procedimientos, no registros de operación',d:'Las evidencias citadas son documentos (procedimientos, manuales). Un procedimiento demuestra que se definió el control, no que opera. Además: 4 controles no citan evidencia (A.6.2, A.8.14, A.8.32, A.8.34); A.5.29 y A.5.30 citan «Continuidad de Negocios» pero se declaran No implementados; y el mismo documento aparece con tres nombres distintos (proveedores, inventario/clasificación, seguridad física). Solo los PC-INNO tienen código.',a:'En cada control pida el registro más reciente (ticket, acta, informe, captura), no solo el procedimiento. Pida el listado maestro de documentos para fijar los nombres vigentes.',s:['soa']},
+{g:'archivos',sev:'media',t:'Controles declarados «No implementado» y su lugar en el cronograma',d:'A.5.29 y A.5.30 se auditan con Servicios TI (mié 11). A.6.2 (términos de contratación) le corresponde a RRHH (Melinton). A.8.32 (gestión de cambios) y A.8.14 (redundancia) no están asignados a ningún proceso. A.8.34 (protección de sistemas durante pruebas de auditoría) es el control que gobierna lo que ustedes mismos harán en esta auditoría y no tiene procedimiento.',a:'Avise a Melinton de A.6.2. Acuerde en la apertura las reglas de acceso y pruebas de los auditores (A.8.34) y regístrelas en el acta. Las preguntas de cambios y redundancia ya están en las guías de Desarrollo y Servicios TI.',s:['servicios_ti','desarrollo','apertura']},
+{g:'archivos',sev:'baja',t:'Errores de edición en documentos controlados',d:'El estado «Pacialmente implementado» (sin la r) está escrito así en el propio SoA y en su lista de valores. En la matriz de entregables los controles 5.10, 5.20, 5.30, 8.10, 8.20 y 8.30 aparecen como 5.1, 5.2, 5.3, 8.1, 8.2 y 8.3 (el Excel recortó el cero), lo que puede confundirlos con otros controles; hay faltas de ortografía en encabezados.',a:'Es una oportunidad de mejora (7.5.2), no una no conformidad. Menciónelo con tacto; no distraiga el foco.',s:[]}
 ];
 
 /* ===== GUÍAS DE AUDITORÍA POR PROCESO =====
@@ -469,7 +578,7 @@ apertura:{
   {ref:[],q:'Confirmar los CRITERIOS: ISO/IEC 27001:2022, políticas y procedimientos del SGSI, SoA vigente, requisitos legales y contractuales aplicables.',ev:''},
   {ref:[],q:'Explicar el MÉTODO: auditoría basada en evidencia y muestreo; las conclusiones se limitan a lo muestreado.',ev:'',al:'Si no lo aclara, el auditado puede entender que «no hallazgo = todo conforme».'},
   {ref:[],q:'Confidencialidad: cómo se tratarán las evidencias y el informe (cuántas personas tendrán acceso).',ev:''},
-  {ref:['A.8.34'],q:'Acordar el acceso a sistemas: las pruebas de auditoría deben hacerse en modo lectura y sin afectar producción; quién acompaña, qué pantallas se pueden mostrar.',ev:'Acuerdo verbal registrado en acta.'},
+  {ref:['A.8.34'],q:'Acordar el acceso a sistemas: las pruebas de auditoría deben hacerse en modo lectura y sin afectar producción; quién acompaña, qué pantallas se pueden mostrar.',ev:'Acuerdo verbal registrado en acta.',pre:'Su SoA declara A.8.34 «No implementado» y sin evidencia: la empresa no tiene un procedimiento propio. Defina y registre las reglas con ellos en esta reunión.'},
   {ref:[],q:'Clasificación de hallazgos (NC mayor, NC menor, observación, OM) según el procedimiento de auditoría interna de la empresa.',ev:'Procedimiento de auditoría interna.'},
   {ref:[],q:'Cómo se comunicarán los hallazgos (reuniones diarias, validación con el responsable del proceso, plazos para réplicas).',ev:''},
   {ref:[],q:'Confirmar el calendario, ajustes de horarios y disponibilidad de los auditados (especialmente SoA y días técnicos).',ev:'Calendario confirmado.'},
@@ -489,7 +598,8 @@ planificacion:{
   {ref:['6.1.2'],q:'Explíqueme la metodología de evaluación de riesgos: criterios de aceptación, escalas de probabilidad e impacto, identificación de activos, amenazas y vulnerabilidades. ¿Quién es dueño de cada riesgo?',ev:'Metodología aprobada, matriz de riesgos con fecha, criterios de aceptación y propietarios.',al:'Sin criterios de aceptación; sin dueños de riesgo; matriz con más de 12 meses o sin actualizar tras cambios; no incluye proveedores/nube.'},
   {ref:['6.1.2','6.1.3'],q:'Tomemos 3 riesgos ALTOS de la matriz: ¿cómo se identificó cada uno, cómo se valoró, qué tratamiento se decidió y quién lo aprobó?',ev:'Trazabilidad: riesgo → decisión → control en SoA → evidencia de implementación.',al:'Riesgos altos sin tratamiento o aceptados sin firma del dueño del riesgo.'},
   {ref:['6.1.3'],q:'Muéstreme el plan de tratamiento y cómo se eligieron los controles. ¿Se comparó con el Anexo A para confirmar que no falta ningún control necesario?',ev:'Plan de tratamiento aprobado con responsables y plazos; comparación contra Anexo A.',al:'Plan sin fechas ni responsables; sin avance en el último año.'},
-  {ref:['6.1.3'],q:'Muéstreme la Declaración de Aplicabilidad (SoA): versión, fecha, quién la aprobó. ¿Incluye la justificación de inclusión, el estado de implementación y la justificación de exclusiones?',ev:'SoA vigente con los 93 controles y numeración ISO 27001:2022.',al:'Numeración de la versión 2013 (A.9, A.12…); exclusiones sin justificar (ej. excluir A.8.28 con un equipo de desarrollo); controles «implementados» sin evidencia.'},
+  {ref:['6.1.3'],q:'Muéstreme la Declaración de Aplicabilidad (SoA): versión, fecha, quién la aprobó. ¿Incluye la justificación de inclusión, el estado de implementación y la justificación de exclusiones?',ev:'SoA vigente con los 93 controles y numeración ISO 27001:2022.',al:'Versión, fecha o aprobador inexistentes; justificaciones que no se vinculan a riesgos; estados declarados que no se sostienen.',pre:'Su SoA usa la numeración 2022 (93 controles). Los 93 figuran «Aplica» (no hay exclusiones); 3 Implementado, 84 Parcialmente, 6 No implementado. El archivo no muestra versión, fecha ni aprobador. Las 93 justificaciones empiezan con «Requerido para…» y solo 3 mencionan riesgo.'},
+  {ref:['6.1.3','8.3','10.2'],q:'Entre el 20 de julio y el 14 de agosto de 2026 hubo una revisión del SoA por grupos de controles. ¿Dónde están los 6 reportes de cumplimiento y los planes de acción? ¿El SoA que me entregaron es anterior o posterior a esa revisión? ¿Cuántas acciones se han cerrado desde entonces y quién da seguimiento?',ev:'Reportes semanales con porcentaje de cumplimiento, plan de acción con responsables y fechas, y estado actual de cada acción.',al:'No se da seguimiento a las acciones; el SoA no se actualizó tras la revisión; el plan existe pero nadie lo ejecuta (esto es 8.3, no cada control).',pre:'La matriz de entregables (consultor Alian Hernandez) planifica 6 revisiones semanales con reporte y plan de acción. No he visto esos reportes: solo lo que describe la matriz.'},
   {ref:['6.1.3'],q:'¿Hubo aprobación formal del plan de tratamiento y aceptación de los riesgos residuales por parte de sus dueños?',ev:'Acta o firma del plan y de la aceptación de riesgos residuales.',al:'Aprobación del plan solo por el área de calidad o TI; ningún directivo.'},
   {ref:['6.2'],q:'¿Cuáles son los objetivos de seguridad de la información? ¿Cómo se miden, quién es responsable, cuál es el plazo y cómo se monitorean?',ev:'Objetivos con indicador, meta, responsable, plazo y resultados recientes.',al:'Objetivos no medibles («mejorar la seguridad»), sin seguimiento, copia de los de calidad.'},
   {ref:['6.3'],q:'¿Se hizo algún cambio al SGSI en el último año (alcance, estructura, herramientas, procesos)? ¿Cómo se planificó?',ev:'Registro de cambios con evaluación de impacto (requisito nuevo en 2022).',al:'Cambios importantes sin planificación ni registro.'},
@@ -521,7 +631,7 @@ ventas:{
   {ref:['A.5.14'],q:'Cuando envía una propuesta, cotización o contrato a un cliente, ¿por qué medio lo hace? ¿Existe una regla sobre canales permitidos (correo corporativo, WhatsApp, Drive personal)?',ev:'Política de transferencia; 3 envíos recientes con el canal usado.',al:'Uso de WhatsApp o correo personal para documentos con datos de clientes; sin regla.'},
   {ref:['A.5.14','A.6.6'],q:'¿Cómo protege la información sensible al compartirla (contraseña, cifrado, enlace con vencimiento)? ¿Hay NDA firmado con clientes y prospectos?',ev:'Muestra de NDAs firmados; plantilla estándar.',al:'Se comparte información sensible antes de firmar NDA.'},
   {ref:['A.5.34'],q:'¿Qué datos personales de clientes y prospectos recopilan (nombre, documento de identidad, correo, teléfono)? ¿Dónde se guardan y quién accede?',ev:'Registro de tratamiento de datos o inventario de datos personales; política de privacidad.',al:'Datos en hojas de Excel locales; CRM abierto a todos.'},
-  {ref:['A.5.34','A.5.31'],q:'¿Cómo obtienen y registran el consentimiento? ¿Cómo atienden solicitudes de acceso, rectificación o supresión de datos? (Confirme con el Asesor Legal qué ley de protección de datos aplica en el país de operación.)',ev:'Formato de consentimiento y registro de solicitudes atendidas.',al:'No hay procedimiento; nadie sabe quién atiende estas solicitudes.'},
+  {ref:['A.5.34','A.5.31'],q:'¿Cómo obtienen y registran el consentimiento de los titulares? ¿Cómo atienden solicitudes de acceso, rectificación, actualización o supresión de datos (Ley 172-13, República Dominicana, que su propio SoA cita en A.5.5 y A.5.31)?',ev:'Formato de consentimiento y registro de solicitudes atendidas. Su SoA cita el «PROCEDIMIENTO DE PROTECCIÓN DE DATOS, CRIPTOGRAFÍA Y TRATAMIENTO SEGURO»: pídalo y compare lo que dice con lo que hacen.',al:'No hay procedimiento; nadie sabe quién atiende estas solicitudes; el procedimiento existe pero los vendedores no lo conocen.'},
   {ref:['4.2','A.5.31'],q:'¿Cómo identifican los requisitos de seguridad que el cliente exige (confidencialidad, SLA, auditorías, certificaciones) antes de firmar? ¿Quién los revisa?',ev:'Revisión de contratos de 3 clientes; checklist de revisión previa; matriz de requisitos de clientes.',al:'Ventas promete cosas sin revisión técnica ni legal; las cláusulas de seguridad no llegan a Operaciones.'},
   {ref:['A.5.18','A.8.3'],sug:true,q:'¿Quién tiene acceso al CRM? ¿Qué pasa con el acceso de un vendedor que se va de la empresa?',ev:'Lista de usuarios del CRM comparada con la nómina actual (3 salidas recientes).',al:'Usuarios de ex-empleados activos; cuentas compartidas.'},
   {ref:['A.5.12','A.5.13'],sug:true,q:'¿Cómo sabe si un documento es confidencial? ¿Está clasificado o etiquetado?',ev:'Política de clasificación; 3 documentos de muestra.',al:'El personal no distingue información interna de confidencial.'},
@@ -534,7 +644,7 @@ marcas:{
  simple:'Mismo A.5.14 y A.5.34 que Ventas, pero aplicados a campañas, redes sociales, agencias y respuestas a cuestionarios de seguridad (preventa).',
  prep:['Bases de datos de contactos y política de privacidad','Contratos con agencias de mercadeo','Lista de quién administra redes sociales y web','Cuestionarios de seguridad de clientes respondidos recientemente','Material comercial que menciona ISO / certificaciones'],
  preguntas:[
-  {ref:['A.5.34'],q:'¿De dónde provienen las bases de datos de correos y teléfonos usadas en campañas? ¿Cómo se obtuvo el consentimiento y cómo puede una persona darse de baja?',ev:'Origen de las listas, mecanismo de baja, muestra de consentimientos.',al:'Listas compradas o heredadas sin consentimiento; sin opción de baja.'},
+  {ref:['A.5.34','A.5.31'],q:'¿De dónde provienen las bases de datos de correos y teléfonos usadas en campañas? ¿Cómo se obtuvo el consentimiento y cómo puede una persona darse de baja? ¿Conocen la Ley 172-13 de protección de datos y la ley dominicana sobre correos comerciales no solicitados (Ley 310-14)? Confirme con el Asesor Legal su vigencia y aplicabilidad: esta referencia no sustituye asesoría legal.',ev:'Origen de las listas, mecanismo de baja, muestra de consentimientos.',al:'Listas compradas o heredadas sin consentimiento; sin opción de baja.'},
   {ref:['A.5.14','A.5.12'],q:'¿Se publican casos de éxito, logos o información de clientes? ¿Quién autoriza y cómo?',ev:'Autorización escrita del cliente (muestra de 2 casos publicados).',al:'Publicación de logos o resultados sin permiso, violando NDA.'},
   {ref:['A.5.17','A.8.5'],q:'¿Quién tiene acceso a las cuentas de redes sociales, web y herramientas de campañas? ¿Se usan contraseñas compartidas? ¿Hay doble factor? ¿Qué pasa cuando alguien sale?',ev:'Lista de administradores de cada cuenta comparada con el equipo actual.',al:'Contraseña única compartida; ex-empleados o agencia anterior con acceso.'},
   {ref:['A.5.19','A.5.20'],q:'¿Qué agencias o proveedores externos tienen acceso a información de la empresa o de clientes? ¿Hay contrato con cláusulas de confidencialidad?',ev:'Contratos y NDAs con agencias; evaluación del proveedor.',al:'Agencia con acceso a datos de clientes sin contrato de confidencialidad.'},
@@ -607,7 +717,7 @@ legal:{
  simple:'A.5.31 a A.5.34. La pregunta de fondo: ¿qué leyes y contratos nos obligan en materia de información y cómo sabemos que los cumplimos?',
  prep:['Matriz de requisitos legales con fecha','Tabla de retención documental','Política de privacidad','Muestra de 3 contratos con clientes y 3 con proveedores','Inventario de licencias de software'],
  preguntas:[
-  {ref:['4.2','A.5.31'],q:'¿Cuál es el listado de requisitos legales, reglamentarios y contractuales sobre seguridad de la información (datos personales, delitos informáticos, propiedad intelectual, sector, clientes)? ¿Quién lo mantiene y cuándo se actualizó?',ev:'Matriz legal con fecha de revisión y responsable.',al:'Matriz sin actualizar; ignora requisitos contractuales; sin responsable.'},
+  {ref:['4.2','A.5.31'],q:'¿Cuál es el listado de requisitos legales, reglamentarios y contractuales sobre seguridad de la información (datos personales, delitos informáticos, propiedad intelectual, sector, clientes)? ¿Quién lo mantiene y cuándo se actualizó? ¿Incluye, por ejemplo, la Ley 172-13 (datos personales), la Ley 53-07 (delitos de alta tecnología), la Ley 65-00 (derecho de autor) y la Ley 310-14 (correos comerciales no solicitados)? Verifique vigencia con el propio Asesor Legal: son referencias para orientarse, no asesoría legal.',ev:'Su SoA cita una «Matriz de cumplimiento de requisitos legales» (A.5.31): pídala. Debe tener fecha de revisión, responsable y evaluación de cumplimiento.',pre:'Su SoA declara A.5.31 y A.5.34 «Parcialmente implementado», y cita la Ley 172-13 como justificación.',al:'Matriz sin actualizar; ignora requisitos contractuales; sin responsable.'},
   {ref:['A.5.31'],q:'¿Cómo verifican el cumplimiento de cada requisito? ¿Hay evidencia?',ev:'Evaluación de cumplimiento legal.',al:'Se asume cumplimiento sin verificación.'},
   {ref:['A.5.32'],q:'¿Cómo garantizan que todo el software esté licenciado? ¿Controlan licencias de código abierto en lo que desarrollan?',ev:'Inventario de licencias vs. instalaciones (muestra de 3 equipos).',al:'Software sin licencia; sin control de licencias de código abierto en productos propios.'},
   {ref:['A.5.33'],q:'¿Qué registros deben conservarse y por cuánto tiempo (contratos, financieros, personal, registros)? ¿Cómo se protegen contra pérdida, alteración y acceso no autorizado?',ev:'Tabla de retención y ubicación de los registros.',al:'Sin tabla de retención; destrucción sin control.'},
@@ -634,16 +744,17 @@ revision:{
 soa:{
  especial:'soa',
  objetivo:'Verificar la integridad y la veracidad de la Declaración de Aplicabilidad y complementar con los controles que no se hayan verificado durante la semana.',
- simple:'La herramienta ya sabe qué controles verificó usted en otras sesiones. Concéntrese en los pendientes, empezando por los de mayor riesgo. Primero valide el SoA como documento (verificaciones 1-8) y luego recorra los controles.',
+ simple:'La herramienta ya sabe qué controles verificó usted en otras sesiones y qué declara su SoA de cada uno. Primero valide el SoA como documento y luego recorra los controles: empiece por los 3 «Implementado», siga con los 6 «No implementado» y muestree el resto por riesgo. La revisión previa del consultor validó 7 atributos por control (responsable, procedimiento, evidencia, registro, riesgo asociado, declaración en el SoA y estado): úselos también usted.',
  prep:['SoA vigente (versión y fecha)','Matriz de riesgos y plan de tratamiento','Resumen de lo verificado en la semana (la herramienta lo muestra en la pestaña «Cobertura»)','Acordar con auditados el horario de cada bloque temático'],
  preguntas:[
-  {ref:['6.1.3'],q:'El SoA lista los 93 controles de ISO 27001:2022 con la numeración A.5 a A.8 (no la de 2013).',ev:'Cuente los controles del documento.',al:'Aparecen controles A.9 a A.18 (numeración 2013): SoA no actualizado a la transición.'},
-  {ref:['6.1.3'],q:'Cada control tiene: aplica / no aplica, justificación de inclusión o exclusión y estado de implementación.',ev:'Revise 10 filas al azar.',al:'Campos vacíos; «no aplica» sin justificación.'},
-  {ref:['6.1.3'],q:'Todo control excluido tiene justificación coherente con el alcance y el negocio (ej.: se excluye A.8.28 pero hay desarrolladores; se excluye A.7 pero hay oficinas).',ev:'Desafíe 3 exclusiones.',al:'Exclusiones por comodidad, no por riesgo.'},
-  {ref:['6.1.3'],q:'Los controles marcados «implementado» tienen evidencia. Tome 5 al azar y pida verla.',ev:'Evidencia de cada uno.',al:'Controles «implementados» sin evidencia.'},
-  {ref:['6.1.2','6.1.3'],q:'Hay trazabilidad entre riesgos, plan de tratamiento y SoA. Tome 3 riesgos y rastréelos.',ev:'Riesgo → control → evidencia.',al:'Riesgos sin controles asociados en la SoA.'},
-  {ref:['6.1.3'],q:'La SoA tiene versión, fecha de aprobación y firma de la alta dirección.',ev:'Control documental.',al:'SoA sin aprobar.'},
-  {ref:['6.1.3'],q:'Los controles del plan de tratamiento que aún están «en proceso» tienen responsable y fecha.',ev:'Plan de tratamiento.',al:'Fechas vencidas sin acción.'},
+  {ref:['6.1.3'],q:'El SoA lista los 93 controles de ISO 27001:2022 con la numeración A.5 a A.8 (no la de 2013).',ev:'Cuente los controles del documento.',al:'Aparecen controles A.9 a A.18 (numeración 2013): SoA no actualizado a la transición.',pre:'Verificado en el archivo recibido: 93 controles, numeración A.5–A.8 de 2022. Confirme que ese es el documento vigente.'},
+  {ref:['6.1.3'],q:'Cada control tiene: aplica / no aplica, justificación de inclusión o exclusión y estado de implementación.',ev:'Revise 10 filas al azar.',al:'Campos vacíos; «no aplica» sin justificación.',pre:'En el archivo los 93 tienen aplicabilidad, justificación y estado. Faltan evidencias en 4 (A.6.2, A.8.14, A.8.32, A.8.34, todos «No implementado»). Las 93 justificaciones empiezan con «Requerido para…».'},
+  {ref:['6.1.3'],q:'Todo control excluido tiene justificación coherente con el alcance y el negocio (ej.: se excluye A.8.28 pero hay desarrolladores; se excluye A.7 pero hay oficinas).',ev:'Desafíe 3 exclusiones.',al:'Exclusiones por comodidad, no por riesgo.',pre:'No hay exclusiones: los 93 figuran «Aplica». El desafío cambia: ¿se sostiene cada «Aplica» con un riesgo? ¿Tiene sentido que A.8.30 (desarrollo subcontratado) aplique si no se subcontrata?'},
+  {ref:['6.1.3','A.5.1','A.5.4','A.6.3'],q:'Los 3 controles declarados «Implementado» (A.5.1, A.5.4 y A.6.3) deben demostrarse con evidencia de OPERACIÓN. Verifíquelos primero y por completo.',ev:'A.5.1: política aprobada y su difusión. A.5.4: actas o decisiones de la dirección sobre cumplimiento. A.6.3: plan anual de capacitación, listas de asistencia y la campaña de phishing que cita el SoA.',al:'Un solo documento sin registros de que se aplique; la campaña de phishing sin resultados medidos.',pre:'Solo 3 de 93 están declarados «Implementado». Si alguno no se sostiene, la declaración es inexacta: ese es el hallazgo más sólido que puede tener en esta sesión.'},
+  {ref:['6.1.2','6.1.3'],q:'Hay trazabilidad entre riesgos, plan de tratamiento y SoA. Tome 3 riesgos y rastréelos.',ev:'Riesgo → control → evidencia.',al:'Riesgos sin controles asociados en la SoA.',pre:'El SoA no tiene columna de riesgo asociado y solo 3 de 93 justificaciones mencionan riesgo. La trazabilidad hay que demostrarla con la matriz de riesgos (todavía no he visto esa matriz: pídala).'},
+  {ref:['6.1.3'],q:'La SoA tiene versión, fecha de aprobación y firma de la alta dirección.',ev:'Control documental.',al:'SoA sin aprobar.',pre:'En el archivo recibido solo aparece el título: no hay versión, fecha, elaborador ni aprobador. Puede estar en otro lugar: pregunte.'},
+  {ref:['6.1.3','8.3'],q:'Los 90 controles que no están «Implementado» (84 parciales y 6 no implementados) están cubiertos por un plan de tratamiento con responsable, fecha y avance. Pida el plan y tome 5 acciones.',ev:'Plan de tratamiento con fechas; estado de cada acción; aceptación formal del riesgo residual donde no se actuará.',al:'Acciones vencidas sin reprogramar; ninguna fecha; riesgo residual aceptado por el área técnica y no por la dirección.',pre:'El SoA no tiene columnas de responsable ni fecha: ese plan debe estar en otro documento (quizá en los reportes de la revisión de julio–agosto).'},
+  {ref:['7.5'],q:'Los documentos que el SoA cita como evidencia existen, están vigentes y sus nombres coinciden con el listado maestro.',ev:'Listado maestro vs. los 31 nombres que cita el SoA (ver «Solicitud documental»).',al:'Un documento con varios nombres; documentos citados que no existen; versiones obsoletas.',pre:'Tres documentos parecen aparecer con dos nombres distintos (proveedores, inventario y clasificación de activos, seguridad física). Solo los PC-INNO llevan código.'},
   {ref:['4.3'],q:'El alcance del SGSI es coherente con los controles marcados como aplicables.',ev:'',al:'Un proceso dentro del alcance sin controles aplicables asociados.'}
  ]},
 
@@ -730,7 +841,7 @@ const nl=s=>esc(s).replace(/\n/g,'<br>');
 
 /* ---------- Estado persistente ---------- */
 let storageOK=true;
-function defaults(){return {resp:{},hall:[],prep:{},gprep:{},est:{},cnt:0,aj:{todos:false},informe:{conclusion:''},ultimoRespaldo:null,cambios:0};}
+function defaults(){return {resp:{},hall:[],prep:{},gprep:{},docs:{},est:{},cnt:0,aj:{todos:false},informe:{conclusion:''},ultimoRespaldo:null,cambios:0};}
 function load(){
   try{const r=localStorage.getItem(KEY);if(r){const o=JSON.parse(r);return Object.assign(defaults(),o);}}
   catch(e){storageOK=false;}
@@ -757,6 +868,36 @@ function avisoStorage(){const el=$('#aviso-storage');if(el)el.classList.toggle('
 const REFS={};
 CLAUSULAS.forEach(c=>REFS[c[0]]={id:c[0],t:c[1],s:c[2],e:c[3],k:'cl'});
 CONTROLES.forEach(c=>REFS[c[0]]={id:c[0],t:c[1],s:c[2],e:c[3],k:'ct',tema:c[0].split('.')[1]});
+/* ---------- SoA declarada por la empresa ---------- */
+const EST={
+  imp:{n:'Implementado',c:'t-ok',h:'Declarado IMPLEMENTADO: pida evidencia de operación (registros recientes), no solo el procedimiento. Si no se sostiene, la declaración es inexacta.'},
+  par:{n:'Parcialmente implementado',c:'t-obs',h:'Declarado PARCIAL: identifique QUÉ parte falta, si hay plan con responsable y fecha, y si el riesgo residual fue aceptado.'},
+  no:{n:'No implementado',c:'t-ncM',h:'Declarado NO implementado: confirme que es cierto, que existe un plan con responsable y fecha, y que el riesgo está tratado o aceptado.'}
+};
+const soaDe=id=>SOA[id]?{ap:SOA[id][0],just:SOA[id][1],est:SOA[id][2],ev:SOA[id][3]}:null;
+function soaBox(id,full){
+  const s=soaDe(id);if(!s)return '';
+  const e=EST[s.est];
+  let h='<div class="soa"><b>'+esc(id)+'</b> <span class="badge '+e.c+'">'+esc(e.n)+'</span>';
+  h+='<div class="small">Evidencia que cita su SoA: '+(s.ev?esc(s.ev):'<b>ninguna</b>')+'</div>';
+  if(full){h+='<div class="small mut">Justificación de su SoA: '+esc(s.just)+'</div><div class="small">'+esc(e.h)+'</div>';}
+  return h+'</div>';
+}
+function soaRefs(q){
+  const ids=q.ref.filter(x=>SOA[x]);if(!ids.length)return '';
+  if(q.k==='c')return soaBox(ids[0],true);
+  const shown=ids.slice(0,4).map(x=>soaBox(x,false)).join('');
+  const one=ids.length===1?'<div class="small soa-h">'+esc(EST[SOA[ids[0]][2]].h)+'</div>':'';
+  return '<details class="soa-d" open><summary>Lo que declara su SoA ('+ids.length+')</summary>'+shown+one+(ids.length>4?'<p class="small mut">+ '+(ids.length-4)+' más en la sesión de SoA.</p>':'')+'</details>';
+}
+function docsDeSesion(s){
+  const ids=new Set();
+  s.cubreSet.forEach(x=>{if(SOA[x])ids.add(x);});
+  QS[s.id].forEach(q=>q.ref.forEach(x=>{if(SOA[x])ids.add(x);}));
+  const m=new Map();
+  ids.forEach(id=>SOA[id][3].split(' / ').map(x=>x.trim()).filter(Boolean).forEach(d=>{if(!m.has(d))m.set(d,[]);m.get(d).push(id);}));
+  return m;
+}
 function expand(tokens){
   const out=new Set();
   tokens.forEach(t=>{
@@ -783,7 +924,7 @@ function buildQs(){
   SESIONES.forEach(ses=>{
     const g=GUIAS[ses.guia];if(!g){QS[ses.id]=[];return;}
     const out=[];
-    (g.preguntas||[]).forEach((p,i)=>out.push({id:ses.id+'.'+(i+1),ses:ses.id,ref:p.ref||[],q:p.q,ev:p.ev||'',al:p.al||'',sug:!!p.sug,k:'g'}));
+    (g.preguntas||[]).forEach((p,i)=>out.push({id:ses.id+'.'+(i+1),ses:ses.id,ref:p.ref||[],q:p.q,ev:p.ev||'',al:p.al||'',pre:p.pre||'',sug:!!p.sug,k:'g'}));
     if(ses.guia==='soa')CONTROLES.forEach(c=>out.push({id:ses.id+'.'+c[0],ses:ses.id,ref:[c[0]],q:c[0]+' · '+c[1]+' — ¿Aplica según la SoA? Si aplica: ¿cómo está implementado y qué evidencia lo demuestra? Si se excluyó: ¿cuál es la justificación y sigue siendo válida?',ev:c[3],al:'',sug:false,k:'c',ctrl:c}));
     if(TRANS_GUIAS.includes(ses.guia))TRANSVERSALES.forEach((p,i)=>out.push({id:ses.id+'.T'+(i+1),ses:ses.id,ref:p.ref,q:p.q,ev:p.ev,al:p.al,sug:false,k:'t'}));
     QS[ses.id]=out;
@@ -847,7 +988,7 @@ let tabSes='preparar',filtroQ='todas',filtroSoA='pend',filtroH='todos',filtroCob
 function ruta(){const h=location.hash.replace(/^#\/?/,'')||'plan';const p=h.split('/');return {v:p[0],a:decodeURIComponent(p[1]||'')};}
 function render(){
   const r=ruta();let html='';
-  const mapa={plan:vPlan,sesion:()=>vSesion(r.a),hallazgos:vHallazgos,hallazgo:()=>vHallazgo(r.a),cobertura:vCobertura,cronograma:vCronograma,biblioteca:vBiblioteca,datos:vDatos};
+  const mapa={documentos:vDocumentos,plan:vPlan,sesion:()=>vSesion(r.a),hallazgos:vHallazgos,hallazgo:()=>vHallazgo(r.a),cobertura:vCobertura,cronograma:vCronograma,biblioteca:vBiblioteca,datos:vDatos};
   html=(mapa[r.v]||vPlan)();
   $('#app').innerHTML=html;
   $$('nav.main a').forEach(a=>a.classList.toggle('on',a.dataset.v===(r.v==='sesion'?'plan':r.v==='hallazgo'?'hallazgos':r.v)));
@@ -871,7 +1012,9 @@ function vPlan(){
   h+='<div class="card hero">'+hero+'<p class="small" style="margin:0;opacity:.9">Auditor: '+esc(YO)+' · Soluciones Globales JM · Auditoría interna ISO 27001:2022</p></div>';
   h+='<div class="card"><h2>Preparación general ('+hechasPrep+'/'+PREP_GENERAL.length+')</h2>'+todosCheck+'</div>';
   const revAlta=REVISION.filter(r=>r.sev==='alta').length;
-  h+='<a class="card warn ses" href="#/cronograma"><b>Revisé su cronograma y encontré '+revAlta+' puntos de prioridad alta</b><br><span class="small">Toque para leerlos. Conviene tratarlos con el líder del equipo antes del miércoles.</span></a>';
+  h+='<a class="card warn ses" href="#/cronograma"><b>Revisé su cronograma, su SoA y la matriz de entregables: '+revAlta+' puntos de prioridad alta</b><br><span class="small">Toque para leerlos. Conviene tratarlos con el líder del equipo antes del miércoles.</span></a>';
+  const nd=Object.keys(S.docs).filter(k=>S.docs[k]).length;
+  h+='<a class="card soft ses" href="#/documentos"><b>Solicitud documental según su SoA</b><br><span class="small">Lista maestra de los documentos que la empresa declara tener como evidencia. Pídalos hoy. ('+nd+' marcados como recibidos)</span></a>';
   h+='<div class="row noprint" style="margin:6px 0 4px"><h2 style="margin:0">Mis sesiones</h2><span class="sp"></span><button class="sm" data-a="todos">'+(S.aj.todos?'Ver solo las mías':'Ver todo el cronograma')+'</button></div>';
   let dia=null;
   mis.forEach(s=>{
@@ -901,11 +1044,13 @@ function cardQ(q,opt){
   h+='<div>'+refsHTML(q.ref)+(q.sug?'<span class="badge b-sug" title="No figura en el cronograma; lo agregué yo por riesgo">sugerido</span>':'')+(q.k==='t'?'<span class="badge t-na">transversal</span>':'')+(opt.mostrarSes?'<a class="badge t-om" href="#/sesion/'+esc(ses.id)+'">'+esc(ses.nombre)+'</a>':'')+'</div>';
   h+='<p class="q-text">'+esc(q.q)+'</p>';
   if(q.ev)h+='<p class="q-ev"><b>'+(q.k==='c'?'Evidencia típica':'Pida ver')+':</b> '+esc(q.ev)+'</p>';
+  if(q.pre)h+='<p class="pre"><b>Lo que ya vi en sus archivos:</b> '+esc(q.pre)+'</p>';
   if(q.k==='c'){
     const prev=evidenciaPrevia(q);
     if(prev.length)h+='<p class="small"><span class="badge t-ok">Ya revisado esta semana</span> '+prev.map(p=>esc(p.ses.nombre)+' ('+TIPOS[R(p.q.id).s].n+')').join('; ')+'</p>';
     h+='<p class="small mut">'+esc(q.ctrl[2])+'</p>';
   }
+  h+=soaRefs(q);
   if(q.al)h+='<details class="q-al"><summary>Señales de alerta</summary><p>'+esc(q.al)+'</p></details>';
   if(chk){
     h+='<div class="stbtns"><button class="t-ok" aria-pressed="'+(r.s==='conforme')+'" data-a="st" data-id="'+esc(q.id)+'" data-s="conforme">'+(r.s==='conforme'?'✓ Hecho':'Marcar como hecho')+'</button></div>';
@@ -977,6 +1122,16 @@ function sPreparar(s,g){
   if(g.prep&&g.prep.length){
     h+='<div class="card"><h2>Solicite antes de entrar</h2>'+g.prep.map((t,i)=>'<label class="chk"><input type="checkbox" data-a="prep" data-k="'+esc(s.id+':'+i)+'" '+(S.prep[s.id+':'+i]?'checked':'')+'><span>'+esc(t)+'</span></label>').join('')+'</div>';
   }
+  if(s.guia!=='soa'){
+    const dm=docsDeSesion(s);
+    if(dm.size){
+      h+='<div class="card"><h2>Documentos que su SoA cita para estos controles ('+dm.size+')</h2><p class="small mut">Pídalos y léalos <b>antes</b> de la entrevista. Son lo que la empresa declara tener.</p>';
+      dm.forEach((ids,d)=>{h+='<label class="chk"><input type="checkbox" data-a="doc" data-k="'+esc(d)+'" '+(S.docs[d]?'checked':'')+'><span>'+esc(d)+' <span class="mut tiny">('+ids.join(', ')+')</span></span></label>';});
+      h+='</div>';
+    }
+    const sinEv=Array.from(new Set([...s.cubreSet,...QS[s.id].flatMap(q=>q.ref)])).filter(x=>SOA[x]&&!SOA[x][3]);
+    if(sinEv.length)h+='<div class="card warn small"><b>Sin evidencia citada en el SoA:</b> '+sinEv.map(x=>chipRef(x)).join('')+' — declarados «'+esc(EST.no.n)+'». Pregunte qué existe realmente.</div>';
+  }
   const refs=Array.from(s.cubreSet).filter(x=>x!=='A.*');
   const sug=new Set();QS[s.id].forEach(q=>{if(q.sug)q.ref.forEach(r=>sug.add(r));});
   if(refs.length||sug.size){
@@ -1015,9 +1170,12 @@ function sSoA(s,g){
   h+='<h2>Verificaciones del documento</h2>'+ver.map(q=>cardQ(q)).join('');
   const c={pend:0,hecha:0};ctr.forEach(q=>R(q.id).s==='pendiente'?c.pend++:c.hecha++);
   h+='<h2 style="margin-top:20px">Controles del Anexo A ('+ctr.length+')</h2><p class="small">Pendientes: <b>'+c.pend+'</b> · Respondidos: <b>'+c.hecha+'</b></p>';
-  const opts=[['pend','Pendientes'],['5','A.5 Organizacionales'],['6','A.6 Personas'],['7','A.7 Físicos'],['8','A.8 Tecnológicos'],['sin','Sin ninguna revisión esta semana'],['todos','Todos']];
+  const cnt={imp:0,par:0,no:0};Object.values(SOA).forEach(x=>cnt[x[2]]++);
+  h+='<div class="grid c3"><div class="card kpi"><b>'+cnt.imp+'</b><span>declarados Implementado</span></div><div class="card kpi"><b>'+cnt.par+'</b><span>declarados Parcialmente</span></div><div class="card kpi"><b>'+cnt.no+'</b><span>declarados No implementado</span></div></div>';
+  h+='<div class="card soft small"><b>Cómo usar esto:</b> los 3 «Implementado» son los que más debe comprobar (si no se sostienen, la declaración es inexacta). Los 6 «No implementado» exigen ver el plan con fecha. Los 84 «Parcialmente» se muestrean por riesgo: lo importante es qué falta y si hay plan.</div>';
+  const opts=[['pend','Pendientes'],['imp','Declarados Implementado (3)'],['no','No implementado (6)'],['sinev','Sin evidencia citada (4)'],['5','A.5 Organizacionales'],['6','A.6 Personas'],['7','A.7 Físicos'],['8','A.8 Tecnológicos'],['sin','Sin revisión esta semana'],['todos','Todos']];
   h+='<div class="filters">'+opts.map(x=>'<button class="'+(filtroSoA===x[0]?'on':'')+'" data-a="fs" data-f="'+x[0]+'">'+x[1]+'</button>').join('')+'</div>';
-  const filt=q=>{const f=filtroSoA;if(f==='todos')return true;if(f==='pend')return R(q.id).s==='pendiente';if(f==='sin')return R(q.id).s==='pendiente'&&evidenciaPrevia(q).length===0;return q.ctrl[0].split('.')[1]===f;};
+  const filt=q=>{const f=filtroSoA;if(f==='todos')return true;if(f==='imp'||f==='no')return SOA[q.ctrl[0]][2]===f;if(f==='sinev')return !SOA[q.ctrl[0]][3];if(f==='pend')return R(q.id).s==='pendiente';if(f==='sin')return R(q.id).s==='pendiente'&&evidenciaPrevia(q).length===0;return q.ctrl[0].split('.')[1]===f;};
   const lista=ctr.filter(filt);
   h+=(lista.map(q=>cardQ(q)).join('')||'<p class="mut">Nada en este filtro.</p>');
   return h;
@@ -1178,28 +1336,53 @@ function vCobertura(){
   let h='<div class="wrap"><h1>Cobertura de la auditoría</h1><p class="mut small">Muestra qué requisitos están asignados a un proceso en el cronograma y cuáles ha verificado usted realmente. Solo cuentan las preguntas respondidas con resultado (no las pendientes).</p>';
   h+='<div class="grid c4"><div class="card kpi"><b>'+clAsig+'/'+cl.length+'</b><span>Cláusulas con proceso asignado</span></div><div class="card kpi"><b>'+ctAsig+'/93</b><span>Controles con proceso asignado</span></div><div class="card kpi"><b>'+ctVer+'/93</b><span>Controles verificados</span></div><div class="card kpi"><b>'+ctNC+'</b><span>Controles con NC</span></div></div>';
   h+='<div class="card warn small"><b>Lectura crítica:</b> '+(93-ctAsig)+' controles solo se auditan en la sesión SoA del viernes 13. Eso es legítimo si el programa de auditoría lo justifica por riesgo, pero debe quedar documentado.</div>';
+  const incons=ct.filter(x=>SOA[x.id]&&SOA[x.id][2]==='imp'&&['ncmayor','ncmenor','obs'].includes(x.peor));
+  if(incons.length)h+='<div class="card bad small"><b>Declarado «Implementado» pero con hallazgo:</b> '+incons.map(x=>chipRef(x.id)).join('')+' — la declaración del SoA no se sostiene.</div>';
+  const declImp=CONTROLES.filter(c=>SOA[c[0]][2]==='imp').map(c=>c[0]);
+  const impVer=declImp.filter(i=>cob[i].verif>0).length;
+  h+='<div class="card soft small"><b>Declaración vs. realidad:</b> su SoA declara '+declImp.length+' controles «Implementado» ('+declImp.join(', ')+'). Verificados hasta ahora: '+impVer+'/'+declImp.length+'.</div>';
   const fl=[['todos','Todos'],['sinproc','Sin proceso asignado'],['sinver','Sin verificar'],['nc','Con NC / observación']];
   h+='<div class="filters">'+fl.map(x=>'<button class="'+(filtroCob===x[0]?'on':'')+'" data-a="fc" data-f="'+x[0]+'">'+x[1]+'</button>').join('')+'</div>';
   const ok=x=>filtroCob==='todos'||(filtroCob==='sinproc'&&!x.asig.length)||(filtroCob==='sinver'&&x.verif===0)||(filtroCob==='nc'&&['ncmayor','ncmenor','obs'].includes(x.peor));
   const fila=(x)=>{
     const r=REFS[x.id];
     const asig=x.asig.length?x.asig.map(i=>'<a href="#/sesion/'+i+'" class="chip">'+esc(SES[i].nombre.replace(/^Gestión (de la |de los |de )?/,'').replace(/\s*\(.*$/,'').slice(0,34))+'</a>').join(''):(x.soloSoA?'<span class="badge b-sug">solo SoA</span>':'<span class="badge t-ncM">sin asignar</span>');
-    return '<tr><td><button class="ref" data-a="ref" data-id="'+x.id+'">'+x.id+'</button></td><td>'+esc(r.t)+'</td><td>'+asig+'</td><td>'+x.qs.length+'</td><td>'+(x.peor==='pendiente'?'<span class="badge t-pend">Sin verificar</span>':badge(x.peor))+'</td></tr>';
+    const sd=soaDe(x.id);
+    const decl=sd?'<span class="badge '+EST[sd.est].c+'" title="'+esc(EST[sd.est].n)+'">'+(sd.est==='imp'?'Impl.':sd.est==='par'?'Parcial':'No impl.')+'</span>':'<span class="mut">—</span>';
+    return '<tr><td><button class="ref" data-a="ref" data-id="'+x.id+'">'+x.id+'</button></td><td>'+esc(r.t)+'</td><td>'+asig+'</td><td>'+decl+'</td><td>'+x.qs.length+'</td><td>'+(x.peor==='pendiente'?'<span class="badge t-pend">Sin verificar</span>':badge(x.peor))+'</td></tr>';
   };
-  const tabla=(titulo,arr)=>{const f=arr.filter(ok);return f.length?'<h2 style="margin-top:18px">'+esc(titulo)+'</h2><div class="card tbl"><table><thead><tr><th>Id</th><th>Requisito</th><th>Proceso</th><th>Preg.</th><th>Estado</th></tr></thead><tbody>'+f.map(fila).join('')+'</tbody></table></div>':'';};
+  const tabla=(titulo,arr)=>{const f=arr.filter(ok);return f.length?'<h2 style="margin-top:18px">'+esc(titulo)+'</h2><div class="card tbl"><table><thead><tr><th>Id</th><th>Requisito</th><th>Proceso</th><th>SoA declara</th><th>Preg.</th><th>Resultado</th></tr></thead><tbody>'+f.map(fila).join('')+'</tbody></table></div>':'';};
   h+=tabla('Cláusulas 4 a 10',cl);
   [5,6,7,8].forEach(t=>{h+=tabla(TEMAS[t],ct.filter(x=>x.id.split('.')[1]==String(t)));});
   return h+'</div>';
 }
 
+/* ---------- Documentos citados por el SoA ---------- */
+function vDocumentos(){
+  const m=new Map();
+  CONTROLES.forEach(c=>SOA[c[0]][3].split(' / ').map(x=>x.trim()).filter(Boolean).forEach(d=>{if(!m.has(d))m.set(d,[]);m.get(d).push(c[0]);}));
+  const lista=Array.from(m.entries()).sort((a,b)=>b[1].length-a[1].length);
+  const rec=lista.filter(x=>S.docs[x[0]]).length;
+  let h='<div class="wrap"><p class="small"><a href="#/plan">← Plan</a></p><h1>Solicitud documental</h1><p class="mut small">Documentos que el SoA de la empresa cita como evidencia ('+lista.length+' nombres distintos). Marque cada uno cuando lo reciba. Recibidos: <b>'+rec+'/'+lista.length+'</b>.</p>';
+  h+='<div class="card warn small"><b>Ojo con los nombres:</b> en su SoA un mismo documento parece aparecer con nombres distintos («PROCEDIMIENTO DE PROVEEDORES» y «…GESTIÓN DE PROVEEDORES Y SERVICIOS EXTERNOS»; «…INVENTARIO Y CLASIFICACIÓN DE ACTIVOS» y «…DE ACTIVOS DE INFORMACIÓN»; «…SEGURIDAD FÍSICA» y «…FÍSICA Y AMBIENTAL»). Pida el listado maestro de documentos y confirme cuál es el vigente. Solo los PC-INNO tienen código.</div>';
+  h+='<div class="card">';
+  lista.forEach(x=>{h+='<label class="chk"><input type="checkbox" data-a="doc" data-k="'+esc(x[0])+'" '+(S.docs[x[0]]?'checked':'')+'><span>'+esc(x[0])+'<br><span class="mut tiny">'+x[1].length+' control'+(x[1].length>1?'es':'')+': '+x[1].join(', ')+'</span></span></label>';});
+  h+='</div><p class="small mut">Pida además lo que el SoA <b>no</b> cita: matriz de riesgos y metodología, plan de tratamiento, alcance del SGSI, actas de revisión por la dirección, programa de auditoría, informes de la revisión del SoA (julio–agosto 2026) y el procedimiento de auditoría interna.</p></div>';
+  return h;
+}
+
 /* ---------- Cronograma / revisión crítica ---------- */
 function vCronograma(){
-  let h='<div class="wrap"><h1>Revisión crítica del cronograma</h1><p class="mut small">Estas observaciones son mías, basadas solo en lo que dice el Excel. Verifíquelas con el líder del equipo antes de darlas por válidas: pueden existir acuerdos que no están en la matriz.</p>';
+  let h='<div class="wrap"><h1>Revisión crítica</h1><p class="mut small">Estas observaciones son mías, basadas solo en lo que dicen sus archivos (cronograma, SoA y matriz de entregables). Verifíquelas con el líder del equipo antes de darlas por válidas: pueden existir acuerdos que no están por escrito.</p>';
   const lab={alta:'Prioridad alta',media:'Prioridad media',baja:'Prioridad baja'};
-  ['alta','media','baja'].forEach(sev=>{
-    REVISION.filter(r=>r.sev===sev).forEach(r=>{
+  const tit={archivos:'Lo que revelan su SoA y la matriz de entregables',cron:'Sobre el cronograma'};
+  ['archivos','cron'].forEach(gr=>{
+   h+='<h2 style="margin-top:18px">'+tit[gr]+'</h2>';
+   ['alta','media','baja'].forEach(sev=>{
+    REVISION.filter(r=>r.sev===sev&&(r.g||'cron')===gr).forEach(r=>{
       h+='<div class="card '+(sev==='alta'?'bad':sev==='media'?'warn':'')+'"><span class="badge '+(sev==='alta'?'t-ncM':sev==='media'?'t-obs':'t-na')+'">'+lab[sev]+'</span><h3 style="margin-top:6px">'+esc(r.t)+'</h3><p class="small">'+esc(r.d)+'</p><p class="small"><b>Qué hacer:</b> '+esc(r.a)+'</p>'+(r.s.length?'<p class="small mut">Afecta a: '+r.s.map(i=>'<a href="#/sesion/'+i+'">'+esc(SES[i].nombre)+'</a>').join(' · ')+'</p>':'')+'</div>';
     });
+  });
   });
   h+='<h2 style="margin-top:20px">Cronograma completo</h2><div class="card tbl"><table><thead><tr><th>Día</th><th>Hora</th><th>Proceso</th><th>Auditados</th><th>Auditores</th><th>ISO 27001</th></tr></thead><tbody>';
   SESIONES.forEach(s=>{h+='<tr class="'+(esMia(s)?'mine':'')+'"><td>'+esc(DIA_NOMBRE[s.dia])+'</td><td>'+esc(s.hora)+'</td><td><a href="#/sesion/'+s.id+'">'+esc(s.nombre)+'</a></td><td>'+esc(s.aud.join(', '))+'</td><td>'+esc(s.ads.join(', '))+'</td><td>'+esc(s.std)+'</td></tr>';});
@@ -1290,6 +1473,7 @@ document.addEventListener('change',e=>{
   const t=e.target;
   if(t.dataset.a==='gprep'){S.gprep[t.dataset.i]=t.checked;save();render();return;}
   if(t.dataset.a==='prep'){S.prep[t.dataset.k]=t.checked;save();return;}
+  if(t.dataset.a==='doc'){S.docs[t.dataset.k]=t.checked;save();return;}
   if(t.dataset.a==='restore'){
     const f=t.files[0];if(!f)return;const rd=new FileReader();
     rd.onload=()=>{try{const o=JSON.parse(rd.result);if(!o||typeof o!=='object'||!o.resp)throw 0;S=Object.assign(defaults(),o);save();render();toast('Respaldo restaurado');}catch(x){alert('El archivo no es un respaldo válido.');}};

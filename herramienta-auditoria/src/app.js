@@ -8,7 +8,7 @@ const nl=s=>esc(s).replace(/\n/g,'<br>');
 
 /* ---------- Estado persistente ---------- */
 let storageOK=true;
-function defaults(){return {resp:{},hall:[],prep:{},gprep:{},est:{},cnt:0,aj:{todos:false},informe:{conclusion:''},ultimoRespaldo:null,cambios:0};}
+function defaults(){return {resp:{},hall:[],prep:{},gprep:{},docs:{},est:{},cnt:0,aj:{todos:false},informe:{conclusion:''},ultimoRespaldo:null,cambios:0};}
 function load(){
   try{const r=localStorage.getItem(KEY);if(r){const o=JSON.parse(r);return Object.assign(defaults(),o);}}
   catch(e){storageOK=false;}
@@ -35,6 +35,36 @@ function avisoStorage(){const el=$('#aviso-storage');if(el)el.classList.toggle('
 const REFS={};
 CLAUSULAS.forEach(c=>REFS[c[0]]={id:c[0],t:c[1],s:c[2],e:c[3],k:'cl'});
 CONTROLES.forEach(c=>REFS[c[0]]={id:c[0],t:c[1],s:c[2],e:c[3],k:'ct',tema:c[0].split('.')[1]});
+/* ---------- SoA declarada por la empresa ---------- */
+const EST={
+  imp:{n:'Implementado',c:'t-ok',h:'Declarado IMPLEMENTADO: pida evidencia de operación (registros recientes), no solo el procedimiento. Si no se sostiene, la declaración es inexacta.'},
+  par:{n:'Parcialmente implementado',c:'t-obs',h:'Declarado PARCIAL: identifique QUÉ parte falta, si hay plan con responsable y fecha, y si el riesgo residual fue aceptado.'},
+  no:{n:'No implementado',c:'t-ncM',h:'Declarado NO implementado: confirme que es cierto, que existe un plan con responsable y fecha, y que el riesgo está tratado o aceptado.'}
+};
+const soaDe=id=>SOA[id]?{ap:SOA[id][0],just:SOA[id][1],est:SOA[id][2],ev:SOA[id][3]}:null;
+function soaBox(id,full){
+  const s=soaDe(id);if(!s)return '';
+  const e=EST[s.est];
+  let h='<div class="soa"><b>'+esc(id)+'</b> <span class="badge '+e.c+'">'+esc(e.n)+'</span>';
+  h+='<div class="small">Evidencia que cita su SoA: '+(s.ev?esc(s.ev):'<b>ninguna</b>')+'</div>';
+  if(full){h+='<div class="small mut">Justificación de su SoA: '+esc(s.just)+'</div><div class="small">'+esc(e.h)+'</div>';}
+  return h+'</div>';
+}
+function soaRefs(q){
+  const ids=q.ref.filter(x=>SOA[x]);if(!ids.length)return '';
+  if(q.k==='c')return soaBox(ids[0],true);
+  const shown=ids.slice(0,4).map(x=>soaBox(x,false)).join('');
+  const one=ids.length===1?'<div class="small soa-h">'+esc(EST[SOA[ids[0]][2]].h)+'</div>':'';
+  return '<details class="soa-d" open><summary>Lo que declara su SoA ('+ids.length+')</summary>'+shown+one+(ids.length>4?'<p class="small mut">+ '+(ids.length-4)+' más en la sesión de SoA.</p>':'')+'</details>';
+}
+function docsDeSesion(s){
+  const ids=new Set();
+  s.cubreSet.forEach(x=>{if(SOA[x])ids.add(x);});
+  QS[s.id].forEach(q=>q.ref.forEach(x=>{if(SOA[x])ids.add(x);}));
+  const m=new Map();
+  ids.forEach(id=>SOA[id][3].split(' / ').map(x=>x.trim()).filter(Boolean).forEach(d=>{if(!m.has(d))m.set(d,[]);m.get(d).push(id);}));
+  return m;
+}
 function expand(tokens){
   const out=new Set();
   tokens.forEach(t=>{
@@ -61,7 +91,7 @@ function buildQs(){
   SESIONES.forEach(ses=>{
     const g=GUIAS[ses.guia];if(!g){QS[ses.id]=[];return;}
     const out=[];
-    (g.preguntas||[]).forEach((p,i)=>out.push({id:ses.id+'.'+(i+1),ses:ses.id,ref:p.ref||[],q:p.q,ev:p.ev||'',al:p.al||'',sug:!!p.sug,k:'g'}));
+    (g.preguntas||[]).forEach((p,i)=>out.push({id:ses.id+'.'+(i+1),ses:ses.id,ref:p.ref||[],q:p.q,ev:p.ev||'',al:p.al||'',pre:p.pre||'',sug:!!p.sug,k:'g'}));
     if(ses.guia==='soa')CONTROLES.forEach(c=>out.push({id:ses.id+'.'+c[0],ses:ses.id,ref:[c[0]],q:c[0]+' · '+c[1]+' — ¿Aplica según la SoA? Si aplica: ¿cómo está implementado y qué evidencia lo demuestra? Si se excluyó: ¿cuál es la justificación y sigue siendo válida?',ev:c[3],al:'',sug:false,k:'c',ctrl:c}));
     if(TRANS_GUIAS.includes(ses.guia))TRANSVERSALES.forEach((p,i)=>out.push({id:ses.id+'.T'+(i+1),ses:ses.id,ref:p.ref,q:p.q,ev:p.ev,al:p.al,sug:false,k:'t'}));
     QS[ses.id]=out;
@@ -125,7 +155,7 @@ let tabSes='preparar',filtroQ='todas',filtroSoA='pend',filtroH='todos',filtroCob
 function ruta(){const h=location.hash.replace(/^#\/?/,'')||'plan';const p=h.split('/');return {v:p[0],a:decodeURIComponent(p[1]||'')};}
 function render(){
   const r=ruta();let html='';
-  const mapa={plan:vPlan,sesion:()=>vSesion(r.a),hallazgos:vHallazgos,hallazgo:()=>vHallazgo(r.a),cobertura:vCobertura,cronograma:vCronograma,biblioteca:vBiblioteca,datos:vDatos};
+  const mapa={documentos:vDocumentos,plan:vPlan,sesion:()=>vSesion(r.a),hallazgos:vHallazgos,hallazgo:()=>vHallazgo(r.a),cobertura:vCobertura,cronograma:vCronograma,biblioteca:vBiblioteca,datos:vDatos};
   html=(mapa[r.v]||vPlan)();
   $('#app').innerHTML=html;
   $$('nav.main a').forEach(a=>a.classList.toggle('on',a.dataset.v===(r.v==='sesion'?'plan':r.v==='hallazgo'?'hallazgos':r.v)));
@@ -149,7 +179,9 @@ function vPlan(){
   h+='<div class="card hero">'+hero+'<p class="small" style="margin:0;opacity:.9">Auditor: '+esc(YO)+' · Soluciones Globales JM · Auditoría interna ISO 27001:2022</p></div>';
   h+='<div class="card"><h2>Preparación general ('+hechasPrep+'/'+PREP_GENERAL.length+')</h2>'+todosCheck+'</div>';
   const revAlta=REVISION.filter(r=>r.sev==='alta').length;
-  h+='<a class="card warn ses" href="#/cronograma"><b>Revisé su cronograma y encontré '+revAlta+' puntos de prioridad alta</b><br><span class="small">Toque para leerlos. Conviene tratarlos con el líder del equipo antes del miércoles.</span></a>';
+  h+='<a class="card warn ses" href="#/cronograma"><b>Revisé su cronograma, su SoA y la matriz de entregables: '+revAlta+' puntos de prioridad alta</b><br><span class="small">Toque para leerlos. Conviene tratarlos con el líder del equipo antes del miércoles.</span></a>';
+  const nd=Object.keys(S.docs).filter(k=>S.docs[k]).length;
+  h+='<a class="card soft ses" href="#/documentos"><b>Solicitud documental según su SoA</b><br><span class="small">Lista maestra de los documentos que la empresa declara tener como evidencia. Pídalos hoy. ('+nd+' marcados como recibidos)</span></a>';
   h+='<div class="row noprint" style="margin:6px 0 4px"><h2 style="margin:0">Mis sesiones</h2><span class="sp"></span><button class="sm" data-a="todos">'+(S.aj.todos?'Ver solo las mías':'Ver todo el cronograma')+'</button></div>';
   let dia=null;
   mis.forEach(s=>{
@@ -179,11 +211,13 @@ function cardQ(q,opt){
   h+='<div>'+refsHTML(q.ref)+(q.sug?'<span class="badge b-sug" title="No figura en el cronograma; lo agregué yo por riesgo">sugerido</span>':'')+(q.k==='t'?'<span class="badge t-na">transversal</span>':'')+(opt.mostrarSes?'<a class="badge t-om" href="#/sesion/'+esc(ses.id)+'">'+esc(ses.nombre)+'</a>':'')+'</div>';
   h+='<p class="q-text">'+esc(q.q)+'</p>';
   if(q.ev)h+='<p class="q-ev"><b>'+(q.k==='c'?'Evidencia típica':'Pida ver')+':</b> '+esc(q.ev)+'</p>';
+  if(q.pre)h+='<p class="pre"><b>Lo que ya vi en sus archivos:</b> '+esc(q.pre)+'</p>';
   if(q.k==='c'){
     const prev=evidenciaPrevia(q);
     if(prev.length)h+='<p class="small"><span class="badge t-ok">Ya revisado esta semana</span> '+prev.map(p=>esc(p.ses.nombre)+' ('+TIPOS[R(p.q.id).s].n+')').join('; ')+'</p>';
     h+='<p class="small mut">'+esc(q.ctrl[2])+'</p>';
   }
+  h+=soaRefs(q);
   if(q.al)h+='<details class="q-al"><summary>Señales de alerta</summary><p>'+esc(q.al)+'</p></details>';
   if(chk){
     h+='<div class="stbtns"><button class="t-ok" aria-pressed="'+(r.s==='conforme')+'" data-a="st" data-id="'+esc(q.id)+'" data-s="conforme">'+(r.s==='conforme'?'✓ Hecho':'Marcar como hecho')+'</button></div>';
@@ -255,6 +289,16 @@ function sPreparar(s,g){
   if(g.prep&&g.prep.length){
     h+='<div class="card"><h2>Solicite antes de entrar</h2>'+g.prep.map((t,i)=>'<label class="chk"><input type="checkbox" data-a="prep" data-k="'+esc(s.id+':'+i)+'" '+(S.prep[s.id+':'+i]?'checked':'')+'><span>'+esc(t)+'</span></label>').join('')+'</div>';
   }
+  if(s.guia!=='soa'){
+    const dm=docsDeSesion(s);
+    if(dm.size){
+      h+='<div class="card"><h2>Documentos que su SoA cita para estos controles ('+dm.size+')</h2><p class="small mut">Pídalos y léalos <b>antes</b> de la entrevista. Son lo que la empresa declara tener.</p>';
+      dm.forEach((ids,d)=>{h+='<label class="chk"><input type="checkbox" data-a="doc" data-k="'+esc(d)+'" '+(S.docs[d]?'checked':'')+'><span>'+esc(d)+' <span class="mut tiny">('+ids.join(', ')+')</span></span></label>';});
+      h+='</div>';
+    }
+    const sinEv=Array.from(new Set([...s.cubreSet,...QS[s.id].flatMap(q=>q.ref)])).filter(x=>SOA[x]&&!SOA[x][3]);
+    if(sinEv.length)h+='<div class="card warn small"><b>Sin evidencia citada en el SoA:</b> '+sinEv.map(x=>chipRef(x)).join('')+' — declarados «'+esc(EST.no.n)+'». Pregunte qué existe realmente.</div>';
+  }
   const refs=Array.from(s.cubreSet).filter(x=>x!=='A.*');
   const sug=new Set();QS[s.id].forEach(q=>{if(q.sug)q.ref.forEach(r=>sug.add(r));});
   if(refs.length||sug.size){
@@ -293,9 +337,12 @@ function sSoA(s,g){
   h+='<h2>Verificaciones del documento</h2>'+ver.map(q=>cardQ(q)).join('');
   const c={pend:0,hecha:0};ctr.forEach(q=>R(q.id).s==='pendiente'?c.pend++:c.hecha++);
   h+='<h2 style="margin-top:20px">Controles del Anexo A ('+ctr.length+')</h2><p class="small">Pendientes: <b>'+c.pend+'</b> · Respondidos: <b>'+c.hecha+'</b></p>';
-  const opts=[['pend','Pendientes'],['5','A.5 Organizacionales'],['6','A.6 Personas'],['7','A.7 Físicos'],['8','A.8 Tecnológicos'],['sin','Sin ninguna revisión esta semana'],['todos','Todos']];
+  const cnt={imp:0,par:0,no:0};Object.values(SOA).forEach(x=>cnt[x[2]]++);
+  h+='<div class="grid c3"><div class="card kpi"><b>'+cnt.imp+'</b><span>declarados Implementado</span></div><div class="card kpi"><b>'+cnt.par+'</b><span>declarados Parcialmente</span></div><div class="card kpi"><b>'+cnt.no+'</b><span>declarados No implementado</span></div></div>';
+  h+='<div class="card soft small"><b>Cómo usar esto:</b> los 3 «Implementado» son los que más debe comprobar (si no se sostienen, la declaración es inexacta). Los 6 «No implementado» exigen ver el plan con fecha. Los 84 «Parcialmente» se muestrean por riesgo: lo importante es qué falta y si hay plan.</div>';
+  const opts=[['pend','Pendientes'],['imp','Declarados Implementado (3)'],['no','No implementado (6)'],['sinev','Sin evidencia citada (4)'],['5','A.5 Organizacionales'],['6','A.6 Personas'],['7','A.7 Físicos'],['8','A.8 Tecnológicos'],['sin','Sin revisión esta semana'],['todos','Todos']];
   h+='<div class="filters">'+opts.map(x=>'<button class="'+(filtroSoA===x[0]?'on':'')+'" data-a="fs" data-f="'+x[0]+'">'+x[1]+'</button>').join('')+'</div>';
-  const filt=q=>{const f=filtroSoA;if(f==='todos')return true;if(f==='pend')return R(q.id).s==='pendiente';if(f==='sin')return R(q.id).s==='pendiente'&&evidenciaPrevia(q).length===0;return q.ctrl[0].split('.')[1]===f;};
+  const filt=q=>{const f=filtroSoA;if(f==='todos')return true;if(f==='imp'||f==='no')return SOA[q.ctrl[0]][2]===f;if(f==='sinev')return !SOA[q.ctrl[0]][3];if(f==='pend')return R(q.id).s==='pendiente';if(f==='sin')return R(q.id).s==='pendiente'&&evidenciaPrevia(q).length===0;return q.ctrl[0].split('.')[1]===f;};
   const lista=ctr.filter(filt);
   h+=(lista.map(q=>cardQ(q)).join('')||'<p class="mut">Nada en este filtro.</p>');
   return h;
@@ -456,28 +503,53 @@ function vCobertura(){
   let h='<div class="wrap"><h1>Cobertura de la auditoría</h1><p class="mut small">Muestra qué requisitos están asignados a un proceso en el cronograma y cuáles ha verificado usted realmente. Solo cuentan las preguntas respondidas con resultado (no las pendientes).</p>';
   h+='<div class="grid c4"><div class="card kpi"><b>'+clAsig+'/'+cl.length+'</b><span>Cláusulas con proceso asignado</span></div><div class="card kpi"><b>'+ctAsig+'/93</b><span>Controles con proceso asignado</span></div><div class="card kpi"><b>'+ctVer+'/93</b><span>Controles verificados</span></div><div class="card kpi"><b>'+ctNC+'</b><span>Controles con NC</span></div></div>';
   h+='<div class="card warn small"><b>Lectura crítica:</b> '+(93-ctAsig)+' controles solo se auditan en la sesión SoA del viernes 13. Eso es legítimo si el programa de auditoría lo justifica por riesgo, pero debe quedar documentado.</div>';
+  const incons=ct.filter(x=>SOA[x.id]&&SOA[x.id][2]==='imp'&&['ncmayor','ncmenor','obs'].includes(x.peor));
+  if(incons.length)h+='<div class="card bad small"><b>Declarado «Implementado» pero con hallazgo:</b> '+incons.map(x=>chipRef(x.id)).join('')+' — la declaración del SoA no se sostiene.</div>';
+  const declImp=CONTROLES.filter(c=>SOA[c[0]][2]==='imp').map(c=>c[0]);
+  const impVer=declImp.filter(i=>cob[i].verif>0).length;
+  h+='<div class="card soft small"><b>Declaración vs. realidad:</b> su SoA declara '+declImp.length+' controles «Implementado» ('+declImp.join(', ')+'). Verificados hasta ahora: '+impVer+'/'+declImp.length+'.</div>';
   const fl=[['todos','Todos'],['sinproc','Sin proceso asignado'],['sinver','Sin verificar'],['nc','Con NC / observación']];
   h+='<div class="filters">'+fl.map(x=>'<button class="'+(filtroCob===x[0]?'on':'')+'" data-a="fc" data-f="'+x[0]+'">'+x[1]+'</button>').join('')+'</div>';
   const ok=x=>filtroCob==='todos'||(filtroCob==='sinproc'&&!x.asig.length)||(filtroCob==='sinver'&&x.verif===0)||(filtroCob==='nc'&&['ncmayor','ncmenor','obs'].includes(x.peor));
   const fila=(x)=>{
     const r=REFS[x.id];
     const asig=x.asig.length?x.asig.map(i=>'<a href="#/sesion/'+i+'" class="chip">'+esc(SES[i].nombre.replace(/^Gestión (de la |de los |de )?/,'').replace(/\s*\(.*$/,'').slice(0,34))+'</a>').join(''):(x.soloSoA?'<span class="badge b-sug">solo SoA</span>':'<span class="badge t-ncM">sin asignar</span>');
-    return '<tr><td><button class="ref" data-a="ref" data-id="'+x.id+'">'+x.id+'</button></td><td>'+esc(r.t)+'</td><td>'+asig+'</td><td>'+x.qs.length+'</td><td>'+(x.peor==='pendiente'?'<span class="badge t-pend">Sin verificar</span>':badge(x.peor))+'</td></tr>';
+    const sd=soaDe(x.id);
+    const decl=sd?'<span class="badge '+EST[sd.est].c+'" title="'+esc(EST[sd.est].n)+'">'+(sd.est==='imp'?'Impl.':sd.est==='par'?'Parcial':'No impl.')+'</span>':'<span class="mut">—</span>';
+    return '<tr><td><button class="ref" data-a="ref" data-id="'+x.id+'">'+x.id+'</button></td><td>'+esc(r.t)+'</td><td>'+asig+'</td><td>'+decl+'</td><td>'+x.qs.length+'</td><td>'+(x.peor==='pendiente'?'<span class="badge t-pend">Sin verificar</span>':badge(x.peor))+'</td></tr>';
   };
-  const tabla=(titulo,arr)=>{const f=arr.filter(ok);return f.length?'<h2 style="margin-top:18px">'+esc(titulo)+'</h2><div class="card tbl"><table><thead><tr><th>Id</th><th>Requisito</th><th>Proceso</th><th>Preg.</th><th>Estado</th></tr></thead><tbody>'+f.map(fila).join('')+'</tbody></table></div>':'';};
+  const tabla=(titulo,arr)=>{const f=arr.filter(ok);return f.length?'<h2 style="margin-top:18px">'+esc(titulo)+'</h2><div class="card tbl"><table><thead><tr><th>Id</th><th>Requisito</th><th>Proceso</th><th>SoA declara</th><th>Preg.</th><th>Resultado</th></tr></thead><tbody>'+f.map(fila).join('')+'</tbody></table></div>':'';};
   h+=tabla('Cláusulas 4 a 10',cl);
   [5,6,7,8].forEach(t=>{h+=tabla(TEMAS[t],ct.filter(x=>x.id.split('.')[1]==String(t)));});
   return h+'</div>';
 }
 
+/* ---------- Documentos citados por el SoA ---------- */
+function vDocumentos(){
+  const m=new Map();
+  CONTROLES.forEach(c=>SOA[c[0]][3].split(' / ').map(x=>x.trim()).filter(Boolean).forEach(d=>{if(!m.has(d))m.set(d,[]);m.get(d).push(c[0]);}));
+  const lista=Array.from(m.entries()).sort((a,b)=>b[1].length-a[1].length);
+  const rec=lista.filter(x=>S.docs[x[0]]).length;
+  let h='<div class="wrap"><p class="small"><a href="#/plan">← Plan</a></p><h1>Solicitud documental</h1><p class="mut small">Documentos que el SoA de la empresa cita como evidencia ('+lista.length+' nombres distintos). Marque cada uno cuando lo reciba. Recibidos: <b>'+rec+'/'+lista.length+'</b>.</p>';
+  h+='<div class="card warn small"><b>Ojo con los nombres:</b> en su SoA un mismo documento parece aparecer con nombres distintos («PROCEDIMIENTO DE PROVEEDORES» y «…GESTIÓN DE PROVEEDORES Y SERVICIOS EXTERNOS»; «…INVENTARIO Y CLASIFICACIÓN DE ACTIVOS» y «…DE ACTIVOS DE INFORMACIÓN»; «…SEGURIDAD FÍSICA» y «…FÍSICA Y AMBIENTAL»). Pida el listado maestro de documentos y confirme cuál es el vigente. Solo los PC-INNO tienen código.</div>';
+  h+='<div class="card">';
+  lista.forEach(x=>{h+='<label class="chk"><input type="checkbox" data-a="doc" data-k="'+esc(x[0])+'" '+(S.docs[x[0]]?'checked':'')+'><span>'+esc(x[0])+'<br><span class="mut tiny">'+x[1].length+' control'+(x[1].length>1?'es':'')+': '+x[1].join(', ')+'</span></span></label>';});
+  h+='</div><p class="small mut">Pida además lo que el SoA <b>no</b> cita: matriz de riesgos y metodología, plan de tratamiento, alcance del SGSI, actas de revisión por la dirección, programa de auditoría, informes de la revisión del SoA (julio–agosto 2026) y el procedimiento de auditoría interna.</p></div>';
+  return h;
+}
+
 /* ---------- Cronograma / revisión crítica ---------- */
 function vCronograma(){
-  let h='<div class="wrap"><h1>Revisión crítica del cronograma</h1><p class="mut small">Estas observaciones son mías, basadas solo en lo que dice el Excel. Verifíquelas con el líder del equipo antes de darlas por válidas: pueden existir acuerdos que no están en la matriz.</p>';
+  let h='<div class="wrap"><h1>Revisión crítica</h1><p class="mut small">Estas observaciones son mías, basadas solo en lo que dicen sus archivos (cronograma, SoA y matriz de entregables). Verifíquelas con el líder del equipo antes de darlas por válidas: pueden existir acuerdos que no están por escrito.</p>';
   const lab={alta:'Prioridad alta',media:'Prioridad media',baja:'Prioridad baja'};
-  ['alta','media','baja'].forEach(sev=>{
-    REVISION.filter(r=>r.sev===sev).forEach(r=>{
+  const tit={archivos:'Lo que revelan su SoA y la matriz de entregables',cron:'Sobre el cronograma'};
+  ['archivos','cron'].forEach(gr=>{
+   h+='<h2 style="margin-top:18px">'+tit[gr]+'</h2>';
+   ['alta','media','baja'].forEach(sev=>{
+    REVISION.filter(r=>r.sev===sev&&(r.g||'cron')===gr).forEach(r=>{
       h+='<div class="card '+(sev==='alta'?'bad':sev==='media'?'warn':'')+'"><span class="badge '+(sev==='alta'?'t-ncM':sev==='media'?'t-obs':'t-na')+'">'+lab[sev]+'</span><h3 style="margin-top:6px">'+esc(r.t)+'</h3><p class="small">'+esc(r.d)+'</p><p class="small"><b>Qué hacer:</b> '+esc(r.a)+'</p>'+(r.s.length?'<p class="small mut">Afecta a: '+r.s.map(i=>'<a href="#/sesion/'+i+'">'+esc(SES[i].nombre)+'</a>').join(' · ')+'</p>':'')+'</div>';
     });
+  });
   });
   h+='<h2 style="margin-top:20px">Cronograma completo</h2><div class="card tbl"><table><thead><tr><th>Día</th><th>Hora</th><th>Proceso</th><th>Auditados</th><th>Auditores</th><th>ISO 27001</th></tr></thead><tbody>';
   SESIONES.forEach(s=>{h+='<tr class="'+(esMia(s)?'mine':'')+'"><td>'+esc(DIA_NOMBRE[s.dia])+'</td><td>'+esc(s.hora)+'</td><td><a href="#/sesion/'+s.id+'">'+esc(s.nombre)+'</a></td><td>'+esc(s.aud.join(', '))+'</td><td>'+esc(s.ads.join(', '))+'</td><td>'+esc(s.std)+'</td></tr>';});
@@ -568,6 +640,7 @@ document.addEventListener('change',e=>{
   const t=e.target;
   if(t.dataset.a==='gprep'){S.gprep[t.dataset.i]=t.checked;save();render();return;}
   if(t.dataset.a==='prep'){S.prep[t.dataset.k]=t.checked;save();return;}
+  if(t.dataset.a==='doc'){S.docs[t.dataset.k]=t.checked;save();return;}
   if(t.dataset.a==='restore'){
     const f=t.files[0];if(!f)return;const rd=new FileReader();
     rd.onload=()=>{try{const o=JSON.parse(rd.result);if(!o||typeof o!=='object'||!o.resp)throw 0;S=Object.assign(defaults(),o);save();render();toast('Respaldo restaurado');}catch(x){alert('El archivo no es un respaldo válido.');}};

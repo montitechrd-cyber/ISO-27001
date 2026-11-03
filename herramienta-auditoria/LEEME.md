@@ -1,7 +1,9 @@
 # Guía de Auditoría ISO 27001:2022 – Soluciones Globales JM
 
 Herramienta de apoyo para el auditor Alan Montilla. Se basa en el cronograma
-«Auditoría Interna Soluciones Globales JM (ISO 9001, ISO 27001, ISO 20000-1)».
+«Auditoría Interna Soluciones Globales JM (ISO 9001, ISO 27001, ISO 20000-1)», la
+Declaración de Aplicabilidad (SoA) de la empresa y la matriz de entregables de la
+revisión del SoA. Cada pregunta muestra lo que el SoA declara del control.
 
 ## Cómo usarla
 
@@ -19,7 +21,8 @@ Herramienta de apoyo para el auditor Alan Montilla. Se basa en el cronograma
 7. **Cronograma**: revisión crítica del Excel (puntos que conviene aclarar con el líder
    del equipo).
 8. **Biblioteca**: cláusulas, los 93 controles del Anexo A, glosario y técnicas de entrevista.
-9. **Datos**: descargue un respaldo al final de cada día.
+9. **Solicitud documental** (desde el Plan): los 31 documentos que el SoA de la empresa cita como evidencia.
+10. **Datos**: descargue un respaldo al final de cada día.
 
 ## Confidencialidad
 
