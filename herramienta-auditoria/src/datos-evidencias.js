@@ -94,8 +94,12 @@ const EVID={
  'Registros de mantenimiento y de prueba de climatización, UPS/planta eléctrica y extinción de incendios (con fechas)',
  'Fecha de vencimiento de los extintores y señalización observada en el recorrido',
  'Evidencia de cámaras y su retención de grabaciones',
- 'Observación directa durante el recorrido: puerta, orden del cableado, uso como almacén',
- 'Procedimiento de eliminación segura de equipos y discos; certificados de borrado o destrucción de los últimos equipos dados de baja'],
+ 'Observación directa durante el recorrido: puerta, orden del cableado, uso como almacén'],
+'tecnologia.15':[
+ 'Procedimiento de eliminación segura y reutilización de equipos, discos y medios',
+ 'Certificados de borrado seguro o destrucción de los últimos equipos dados de baja (fecha, método, responsable)',
+ 'Registro de baja de activos en el inventario, cotejado con los certificados (muestra de 3)',
+ 'Contrato y acreditaciones del proveedor que realiza la destrucción o el reciclaje, si es externo'],
 'tecnologia.T1':[
  'Política de seguridad de la información vigente (versión, fecha y aprobación de la dirección)',
  'Evidencia de comunicación de la política al personal (correo, intranet, inducción, firma de recepción)',
