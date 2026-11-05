@@ -81,9 +81,9 @@ function buildQs(){
   SESIONES.forEach(ses=>{
     const g=GUIAS[ses.guia];if(!g){QS[ses.id]=[];return;}
     const out=[];
-    (g.preguntas||[]).forEach((p,i)=>out.push({id:ses.id+'.'+(i+1),ses:ses.id,ref:p.ref||[],q:p.q,ev:p.ev||'',al:p.al||'',sug:!!p.sug,k:'g'}));
+    (g.preguntas||[]).forEach((p,i)=>out.push({id:ses.id+'.'+(i+1),ses:ses.id,ref:p.ref||[],q:p.q,ev:p.ev||'',al:p.al||'',sug:!!p.sug,k:'g',evid:EVID[ses.id+'.'+(i+1)]||[]}));
     if(ses.guia==='soa')CONTROLES.filter(c=>SOA_APLICA.includes(c[0])).forEach(c=>out.push({id:ses.id+'.'+c[0],ses:ses.id,ref:[c[0]],q:c[0]+' · '+c[1]+' — Verifique cómo está implementado y qué evidencia lo demuestra.',ev:c[3],al:'',sug:false,k:'c',ctrl:c}));
-    if(TRANS_GUIAS.includes(ses.guia))TRANSVERSALES.forEach((p,i)=>out.push({id:ses.id+'.T'+(i+1),ses:ses.id,ref:p.ref,q:p.q,ev:p.ev,al:p.al,sug:false,k:'t'}));
+    if(TRANS_GUIAS.includes(ses.guia))TRANSVERSALES.forEach((p,i)=>out.push({id:ses.id+'.T'+(i+1),ses:ses.id,ref:p.ref,q:p.q,ev:p.ev,al:p.al,sug:false,k:'t',evid:EVID[ses.id+'.T'+(i+1)]||[]}));
     QS[ses.id]=out;
   });
 }

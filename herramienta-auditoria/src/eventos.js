@@ -10,6 +10,7 @@ document.addEventListener('click',e=>{
   if(a==='cerrar'){if(el.classList.contains('modal')&&e.target!==el)return;cerrarModal();return;}
   if(a==='ref'){e.preventDefault();modalRef(el.dataset.id);return;}
   if(a==='st'){const id=el.dataset.id,act=R(id).s;setR(id,{s:act===el.dataset.s?'pendiente':el.dataset.s});refreshQ(id);return;}
+  if(a==='copiarevid'){const s=SES[el.dataset.id];let t='SOLICITUD DE EVIDENCIAS · '+s.nombre+' · '+DIA_NOMBRE[s.dia]+'\n';QS[s.id].filter(q=>q.evid&&q.evid.length).forEach((q,n)=>{t+='\n'+(n+1)+'. '+q.q+'\n'+q.evid.map(e=>'   ☐ '+e).join('\n')+'\n';});(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>toast('Solicitud copiada')).catch(()=>toast('No se pudo copiar'));return;}
   if(a==='mt'){const id=el.dataset.id,m=(R(id).m||[]).slice(),i=m.indexOf(el.dataset.m);if(i>=0)m.splice(i,1);else m.push(el.dataset.m);setR(id,{m});refreshQ(id);return;}
   if(a==='lv'){const i=el.dataset.i,act=(S.lv[i]||{}).s;S.lv[i]=Object.assign({},S.lv[i],{s:act===el.dataset.s?'':el.dataset.s});save();const c=el.closest('article.q');if(c)refreshQ(c.dataset.id);else render();return;}
   if(a==='lvh'){const i=+el.dataset.i,sid=sesionSugerida(LISTA[i][1]),x=nuevoH({ses:sid});x.ref=LISTA[i][1];x.tipo='obs';x.sit='';save();location.hash='#/hallazgo/'+x.id;return;}
@@ -86,6 +87,7 @@ document.addEventListener('change',e=>{
   if(t.id==='subir'){const d=_destino;_destino={};if(t.files&&t.files.length)subirArchivos(t.files,d);return;}
   if(t.dataset.a==='vsel'){llenarPreguntas();return;}
   if(t.dataset.a==='gprep'){S.gprep[t.dataset.i]=t.checked;save();render();return;}
+  if(t.dataset.a==='evx'){const el=t,id=t.dataset.id,i=+t.dataset.i,x=(R(id).x||[]).slice(),k=x.indexOf(i);if(el.checked&&k<0)x.push(i);else if(!el.checked&&k>=0)x.splice(k,1);setR(id,{x});const sm=el.closest('details').querySelector('summary .n');if(sm)sm.textContent=x.length+'/'+QBYID[id].evid.length+' recibidas';return;}
   if(t.dataset.a==='prep'){S.prep[t.dataset.k]=t.checked;save();return;}
   if(t.dataset.a==='tipodoc'){reanalizarDoc(t.dataset.d,t.value===S.docs[t.dataset.d].analisis.tipoAuto?'':t.value);return;}
   if(t.dataset.a==='sesdoc'){S.docs[t.dataset.d].ses=t.value;save();toast('Sesión actualizada');return;}

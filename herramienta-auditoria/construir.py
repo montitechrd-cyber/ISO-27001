@@ -5,7 +5,7 @@ import base64, datetime, pathlib
 base = pathlib.Path(__file__).parent
 src, vendor = base / "src", base / "vendor"
 
-ORDEN = ["datos-norma.js", "datos-soa.js", "datos-lista.js", "datos-sesiones.js", "datos-guias.js",
+ORDEN = ["datos-norma.js", "datos-soa.js", "datos-lista.js", "datos-sesiones.js", "datos-guias.js", "datos-evidencias.js",
          "plantillas.js", "formatos.js", "analisis.js", "documentos.js", "iconos.js",
          "nucleo.js", "docs-estado.js", "vistas.js", "vistas2.js", "eventos.js", "arranque.js"]
 js = "\n".join((src / n).read_text(encoding="utf-8") for n in ORDEN)
