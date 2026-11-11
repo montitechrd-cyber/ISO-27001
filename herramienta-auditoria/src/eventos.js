@@ -77,8 +77,9 @@ document.addEventListener('keydown',e=>{
   const r=ruta(),en=e.target.matches&&e.target.matches('input,textarea,select,button');
   if(r.v==='sesion'&&S.aj.modo==='foco'&&tabSes==='preguntar'&&!en&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&!$('.modal')){
     const s=SES[r.a];if(!s||!GUIAS[s.guia]||esCheck(s))return;
-    if(e.key==='ArrowRight'){const b=$('[data-a="focosig"]');if(b&&!b.disabled)b.click();}
-    else if(e.key==='ArrowLeft'){const b=$('[data-a="focoprev"]');if(b&&!b.disabled)b.click();}
+    /* Las flechas ← → NO se usan: mover el cursor o desplazarse no debe cambiar de pregunta ni mover la página. Navegación: N (siguiente) y P (anterior). */
+    if(e.key==='n'||e.key==='N'){const b=$('[data-a="focosig"]');if(b&&!b.disabled)b.click();}
+    else if(e.key==='p'||e.key==='P'){const b=$('[data-a="focoprev"]');if(b&&!b.disabled)b.click();}
     else if(/^[1-7]$/.test(e.key)){const l=qsFoco(s),i=S.aj.foco&&S.aj.foco[s.id]||0,q=l[i];if(q){const st=BTN_ORDEN[+e.key-1],act=R(q.id).s;setR(q.id,{s:act===st?'pendiente':st});refreshQ(q.id);}}
   }
 });

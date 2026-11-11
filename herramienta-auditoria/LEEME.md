@@ -23,7 +23,7 @@ Herramienta de apoyo para el auditor Alan Montilla. Se basa en:
   metadatos, **no** los archivos originales ni su texto.
 - **Doble copia**: el trabajo se guarda en dos lugares del navegador y se recupera automáticamente si uno falla.
 - Interfaz renovada: 5 secciones (Hoy, Documentos, Hallazgos, Formatos, Más), modo enfoque con atajos
-  de teclado (1-4, flechas), «Deshacer» en eliminaciones, presentación inicial y página de Ayuda.
+  de teclado (1-7, N y P), «Deshacer» en eliminaciones, presentación inicial y página de Ayuda.
 
 ## Cómo usarla
 

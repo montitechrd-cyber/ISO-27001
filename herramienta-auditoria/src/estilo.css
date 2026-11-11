@@ -243,3 +243,6 @@ tr.mine td:first-child{box-shadow:inset 3px 0 var(--accent)}
 @media print{.topbar,nav.main,.noprint,button,.filtros,.pestanas,.toast{display:none!important}body{background:#fff;color:#000;padding:0!important}.card,.q{box-shadow:none;break-inside:avoid;border-color:#bbb}}
 
 .evid{margin:0 0 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}.evid summary{cursor:pointer;padding:9px 12px;font-weight:600;font-size:.88rem;display:flex;gap:8px;align-items:center}.evid summary .i{color:var(--accent)}.evid summary .n{margin-left:auto;font-weight:500;color:var(--ink-3);font-size:.8rem}.evid .cuerpo{padding:2px 12px 10px}
+
+/* El gesto lateral del trackpad o del dedo no debe navegar atrás/adelante ni mover la página */
+html,body{overscroll-behavior-x:none}

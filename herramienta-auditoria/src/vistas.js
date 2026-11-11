@@ -195,7 +195,7 @@ function sPreguntar(s,g){
   if(modo==='foco'){
     const l=qsFoco(s);if(!l.length)return h+vacio('check','No hay preguntas en este filtro','Cambie el filtro para ver otras preguntas.');
     S.aj.foco=S.aj.foco||{};let i=Math.min(S.aj.foco[s.id]||0,l.length-1);S.aj.foco[s.id]=i;
-    h+=`<div id="foco-prog">${focoProg(s)}</div>${cardQ(l[i])}<div class="foco-nav"><button data-a="focoprev" ${i===0?'disabled':''}>${I('izq')}Anterior</button><button class="primario" data-a="focosig" ${i===l.length-1?'disabled':''}>Siguiente${I('der')}</button></div><p class="small mut" style="text-align:center;margin-top:14px">Atajos: <span class="kbd">←</span> <span class="kbd">→</span> navegar · <span class="kbd">1</span>–<span class="kbd">7</span> resultado</p>`;
+    h+=`<div id="foco-prog">${focoProg(s)}</div>${cardQ(l[i])}<div class="foco-nav"><button data-a="focoprev" ${i===0?'disabled':''}>${I('izq')}Anterior</button><button class="primario" data-a="focosig" ${i===l.length-1?'disabled':''}>Siguiente${I('der')}</button></div><p class="small mut" style="text-align:center;margin-top:14px">Atajos: <span class="kbd">P</span> anterior · <span class="kbd">N</span> siguiente · <span class="kbd">1</span>–<span class="kbd">7</span> resultado</p>`;
     return h;
   }
   const filt=esCheck(s)||filtroQ==='todas'?(()=>true):filtroQ==='pend'?(q=>R(q.id).s==='pendiente'):(q=>R(q.id).s!=='pendiente');

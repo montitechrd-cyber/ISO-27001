@@ -258,6 +258,9 @@ tr.mine td:first-child{box-shadow:inset 3px 0 var(--accent)}
 
 .evid{margin:0 0 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}.evid summary{cursor:pointer;padding:9px 12px;font-weight:600;font-size:.88rem;display:flex;gap:8px;align-items:center}.evid summary .i{color:var(--accent)}.evid summary .n{margin-left:auto;font-weight:500;color:var(--ink-3);font-size:.8rem}.evid .cuerpo{padding:2px 12px 10px}
 
+/* El gesto lateral del trackpad o del dedo no debe navegar atrás/adelante ni mover la página */
+html,body{overscroll-behavior-x:none}
+
 </style>
 </head>
 <body>
@@ -2837,7 +2840,7 @@ function montarIconos(){
 /* ===== APLICACIÓN ===== */
 'use strict';
 const KEY='ga27001-sgjm-v1';
-const VERSION='4.0',BUILD='11/11/2026 16:08';
+const VERSION='4.0',BUILD='11/11/2026 19:23';
 const $=(s,r=document)=>r.querySelector(s);
 const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -3421,7 +3424,7 @@ function sPreguntar(s,g){
   if(modo==='foco'){
     const l=qsFoco(s);if(!l.length)return h+vacio('check','No hay preguntas en este filtro','Cambie el filtro para ver otras preguntas.');
     S.aj.foco=S.aj.foco||{};let i=Math.min(S.aj.foco[s.id]||0,l.length-1);S.aj.foco[s.id]=i;
-    h+=`<div id="foco-prog">${focoProg(s)}</div>${cardQ(l[i])}<div class="foco-nav"><button data-a="focoprev" ${i===0?'disabled':''}>${I('izq')}Anterior</button><button class="primario" data-a="focosig" ${i===l.length-1?'disabled':''}>Siguiente${I('der')}</button></div><p class="small mut" style="text-align:center;margin-top:14px">Atajos: <span class="kbd">←</span> <span class="kbd">→</span> navegar · <span class="kbd">1</span>–<span class="kbd">7</span> resultado</p>`;
+    h+=`<div id="foco-prog">${focoProg(s)}</div>${cardQ(l[i])}<div class="foco-nav"><button data-a="focoprev" ${i===0?'disabled':''}>${I('izq')}Anterior</button><button class="primario" data-a="focosig" ${i===l.length-1?'disabled':''}>Siguiente${I('der')}</button></div><p class="small mut" style="text-align:center;margin-top:14px">Atajos: <span class="kbd">P</span> anterior · <span class="kbd">N</span> siguiente · <span class="kbd">1</span>–<span class="kbd">7</span> resultado</p>`;
     return h;
   }
   const filt=esCheck(s)||filtroQ==='todas'?(()=>true):filtroQ==='pend'?(q=>R(q.id).s==='pendiente'):(q=>R(q.id).s!=='pendiente');
@@ -3737,7 +3740,7 @@ function vAyuda(){
   return `<div class="wrap"><p class="small" style="margin:0 0 10px"><a href="#/mas" style="display:inline-flex;align-items:center;gap:4px;text-decoration:none">${I('izq')}Más</a></p><div class="pagina-t"><h1>Ayuda</h1><p class="sub">Cómo trabajar una sesión de principio a fin.</p></div>
   <div class="card"><h2>Una sesión, paso a paso</h2>${p(1,'Prepare','En «Hoy» abra la sesión. Lea qué debe demostrar y pida los documentos que indica.')}${p(2,'Adjunte y analice los documentos','Arrastre los archivos a «Documentos» o use «Adjuntar» dentro de la sesión. Lea las conclusiones y las preguntas sugeridas.')}${p(3,'Pregunte y registre','Para cada pregunta marque el resultado y anote hechos y evidencia. Use «Enfoque» para ver una pregunta a la vez.')}${p(4,'Retroalimente','Al terminar, lea al auditado los aspectos identificados y anote sus aclaraciones.')}${p(5,'Cierre y genere los formatos','Convierta lo relevante en hallazgos, valídelos y genere la retroalimentación diaria y el formulario de hallazgos.')}</div>
   <div class="card"><h2>Qué hace el análisis de documentos y qué no</h2><ul class="small" style="padding-left:18px"><li><b>Hace:</b> lee Word, Excel, PDF con texto y CSV; extrae código, versión, fechas y aprobación; busca los elementos que la norma espera según el tipo de documento; revisa tablas (responsables, fechas, estados) y propone preguntas y borradores de hallazgo.</li><li><b>No hace:</b> no entiende el sentido del texto, no lee imágenes ni PDF escaneados y no decide si hay una no conformidad. Lo que marca como «no encontrado» es un punto a verificar con el auditado.</li><li><b>Confidencialidad:</b> el análisis ocurre en su dispositivo; ningún documento se envía a internet.</li></ul></div>
-  <div class="card"><h2>Atajos de teclado</h2><p class="small" style="margin:0"><span class="kbd">←</span> <span class="kbd">→</span> pregunta anterior / siguiente (modo Enfoque) · <span class="kbd">1</span> a <span class="kbd">7</span> marcar resultado (Conforme, Observación, Mejora, NC menor, NC mayor, Seguimiento, No aplica) · <span class="kbd">Esc</span> cerrar ventanas</p></div>
+  <div class="card"><h2>Atajos de teclado</h2><p class="small" style="margin:0"><span class="kbd">P</span> / <span class="kbd">N</span> pregunta anterior / siguiente (modo Enfoque; las flechas no cambian de pregunta, para no perder la lectura) · <span class="kbd">1</span> a <span class="kbd">7</span> marcar resultado (Conforme, Observación, Mejora, NC menor, NC mayor, Seguimiento, No aplica) · <span class="kbd">Esc</span> cerrar ventanas</p></div>
   <div class="card"><h2>Si algo falla</h2><ul class="small" style="padding-left:18px"><li>Descargue un respaldo en «Más → Datos» y recargue la página.</li><li>Si un documento no se lee, guárdelo como .docx, .xlsx o PDF con texto.</li><li>Si el navegador no permite guardar, use otro (Chrome o Edge) y no use la ventana privada.</li></ul></div>
   <button class="primario" data-a="tour">${I('play')}Ver la presentación inicial</button></div>`;
 }
@@ -3841,8 +3844,9 @@ document.addEventListener('keydown',e=>{
   const r=ruta(),en=e.target.matches&&e.target.matches('input,textarea,select,button');
   if(r.v==='sesion'&&S.aj.modo==='foco'&&tabSes==='preguntar'&&!en&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&!$('.modal')){
     const s=SES[r.a];if(!s||!GUIAS[s.guia]||esCheck(s))return;
-    if(e.key==='ArrowRight'){const b=$('[data-a="focosig"]');if(b&&!b.disabled)b.click();}
-    else if(e.key==='ArrowLeft'){const b=$('[data-a="focoprev"]');if(b&&!b.disabled)b.click();}
+    /* Las flechas ← → NO se usan: mover el cursor o desplazarse no debe cambiar de pregunta ni mover la página. Navegación: N (siguiente) y P (anterior). */
+    if(e.key==='n'||e.key==='N'){const b=$('[data-a="focosig"]');if(b&&!b.disabled)b.click();}
+    else if(e.key==='p'||e.key==='P'){const b=$('[data-a="focoprev"]');if(b&&!b.disabled)b.click();}
     else if(/^[1-7]$/.test(e.key)){const l=qsFoco(s),i=S.aj.foco&&S.aj.foco[s.id]||0,q=l[i];if(q){const st=BTN_ORDEN[+e.key-1],act=R(q.id).s;setR(q.id,{s:act===st?'pendiente':st});refreshQ(q.id);}}
   }
 });
