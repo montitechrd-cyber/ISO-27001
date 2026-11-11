@@ -40,6 +40,11 @@ Herramienta de apoyo para el auditor Alan Montilla. Se basa en:
 7. **Cobertura**, **Más** (revisión del cronograma, biblioteca, datos y respaldo).
 8. Botón **Modo claro / Modo oscuro** arriba a la izquierda; recuerda su elección.
 
+## Guía explícita de una sesión (Word)
+
+`Guia-Operaciones-TI-11nov.docx` es una guía detallada, con todas las siglas explicadas, para la sesión «Gestión de Operaciones TI»
+(cláusulas y controles del Anexo A relacionados). Se regenera con `python3 herramientas/guia_operaciones_ti/construir_guia.py <salida.docx>`.
+
 ## Confidencialidad
 
 Todo se guarda **solo en el navegador del dispositivo**; nada se envía a ningún servidor. Los
