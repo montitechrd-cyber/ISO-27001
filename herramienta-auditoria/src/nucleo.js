@@ -77,13 +77,21 @@ const esFormato=s=>esMia(s)&&!!GUIAS[s.guia]&&!esCheck(s)&&!['pendientes','infor
 
 /* ---------- Preguntas por sesión ---------- */
 const QS={};
+/* Orden por número de control del Anexo A: primero los requisitos de cláusulas (4-10), luego A.5 → A.8 en orden numérico.
+   Cada pregunta se ubica por su control de número MÁS BAJO. El orden es solo de presentación: los identificadores no cambian. */
+const numA=r=>{const m=/^A\.(\d+)\.(\d+)$/.exec(r);return m?+m[1]*1000+ +m[2]:null;};
+const refsOrdenados=refs=>refs.slice().sort((a,b)=>{const x=numA(a),y=numA(b);if(x===null&&y===null)return parseFloat(a)-parseFloat(b)||0;if(x===null)return -1;if(y===null)return 1;return x-y;});
+const claveAnexo=q=>{const n=q.ref.map(numA).filter(v=>v!==null);return n.length?Math.min(...n):0;};
+const GRP_ANEXO={0:'Requisitos del SGSI (cláusulas 4 a 10)',5:'A.5 · Controles organizacionales',6:'A.6 · Controles de personas',7:'A.7 · Controles físicos',8:'A.8 · Controles tecnológicos'};
+const grupoAnexo=q=>{const k=claveAnexo(q);return k?GRP_ANEXO[Math.floor(k/1000)]:GRP_ANEXO[0];};
 function buildQs(){
   SESIONES.forEach(ses=>{
     const g=GUIAS[ses.guia];if(!g){QS[ses.id]=[];return;}
     const out=[];
     (g.preguntas||[]).forEach((p,i)=>out.push({id:ses.id+'.'+(i+1),ses:ses.id,ref:p.ref||[],q:p.q,ev:p.ev||'',al:p.al||'',sug:!!p.sug,k:'g',evid:EVID[ses.id+'.'+(i+1)]||[]}));
+    if(TRANS_GUIAS.includes(ses.guia)){const idx=new Map(out.map((q,i)=>[q,i]));out.sort((a,b)=>claveAnexo(a)-claveAnexo(b)||idx.get(a)-idx.get(b));out.forEach(q=>{q.grp=grupoAnexo(q);});}
     if(ses.guia==='soa')CONTROLES.filter(c=>SOA_APLICA.includes(c[0])).forEach(c=>out.push({id:ses.id+'.'+c[0],ses:ses.id,ref:[c[0]],q:c[0]+' · '+c[1]+' — Verifique cómo está implementado y qué evidencia lo demuestra.',ev:c[3],al:'',sug:false,k:'c',ctrl:c}));
-    if(TRANS_GUIAS.includes(ses.guia))TRANSVERSALES.forEach((p,i)=>out.push({id:ses.id+'.T'+(i+1),ses:ses.id,ref:p.ref,q:p.q,ev:p.ev,al:p.al,sug:false,k:'t',evid:EVID[ses.id+'.T'+(i+1)]||[]}));
+    if(TRANS_GUIAS.includes(ses.guia))TRANSVERSALES.forEach((p,i)=>out.push({id:ses.id+'.T'+(i+1),ses:ses.id,ref:p.ref,q:p.q,ev:p.ev,al:p.al,sug:false,k:'t',evid:EVID['T'+(i+1)]||[]}));
     QS[ses.id]=out;
   });
 }

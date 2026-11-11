@@ -131,7 +131,7 @@ desarrollo:{
 
 servicios_ti:{
  objetivo:'Comprobar que los servicios y productos TI se operan con seguridad: continuidad, monitoreo, gestión de incidentes, cambios, capacidad e inventario de activos.',
- simple:'Aquí hay dos temas que el cronograma NO asigna a nadie y que son de los más importantes: gestión de incidentes (A.5.24-A.5.28) y gestión de cambios/activos. Se los agregué como «sugeridos». El orden recomendado: continuidad → incidentes → monitoreo → cambios.',
+ simple:'Aquí hay dos temas que el cronograma NO asigna a nadie y que son de los más importantes: gestión de incidentes (A.5.24-A.5.28) y gestión de cambios/activos. Se los agregué como «sugeridos». Las preguntas se presentan en el orden numérico de los controles (A.5 → A.8); la sección «Solicite antes de entrar» le dice qué pedir con anticipación.',
  prep:['Catálogo de servicios y SLA ofrecidos a clientes','Plan de continuidad (BCP/DRP) y análisis de impacto (BIA)','Informe de la última prueba de recuperación','Registro de incidentes de los últimos 12 meses','Inventario de activos','Contratos con proveedores críticos (nube, hosting, conectividad)'],
  preguntas:[
   {ref:['8.1'],q:'¿Qué servicios y productos TI ofrece la organización? ¿Cuáles son los más críticos y cuáles están dentro del alcance del SGSI?',ev:'Catálogo de servicios y su relación con el alcance.',al:'Servicios críticos fuera del alcance.'},

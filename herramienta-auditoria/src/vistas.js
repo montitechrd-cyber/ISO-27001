@@ -107,7 +107,7 @@ function cardQ(q,opt){
   const dq=docsDeQ(q.id),lv=lvDeQ(q),hh=hallDeQ(q.id);
   const abN=!!(r.n||r.e||(r.m&&r.m.length)||(r.s!=='pendiente'&&!chk));
   let h=`<article class="q s-${r.s}" id="q-${esc(q.id)}" data-id="${esc(q.id)}">`;
-  h+=`<div class="q-t">${refsHTML(q.ref)}${q.sug?'<span class="badge b-sug" title="No figura en el cronograma; lo agregué por riesgo">sugerido</span>':''}${q.k==='t'?'<span class="badge t-na">transversal</span>':''}${opt.mostrarSes?`<a class="chip" href="#/sesion/${esc(ses.id)}">${esc(ses.nombre)}</a>`:''}${r.s!=='pendiente'&&!chk?`<span style="margin-left:auto">${stampQ(r.s)}</span>`:''}</div>`;
+  h+=`<div class="q-t">${refsHTML(refsOrdenados(q.ref))}${q.sug?'<span class="badge b-sug" title="No figura en el cronograma; lo agregué por riesgo">sugerido</span>':''}${q.k==='t'?'<span class="badge t-na">transversal</span>':''}${opt.mostrarSes?`<a class="chip" href="#/sesion/${esc(ses.id)}">${esc(ses.nombre)}</a>`:''}${r.s!=='pendiente'&&!chk?`<span style="margin-left:auto">${stampQ(r.s)}</span>`:''}</div>`;
   h+=`<p class="q-txt">${esc(q.q)}</p>`;
   if(q.ev)h+=`<div class="q-pide">${I('ojo')}<div><b>${q.k==='c'?'Evidencia típica':'Pida ver'}:</b> ${esc(q.ev)}</div></div>`;
   if(q.evid&&q.evid.length){const xs=r.x||[],n=xs.filter(i=>i<q.evid.length).length;h+=`<details class="evid"><summary>${I('ojo')}Evidencias a solicitar <span class="n">${n}/${q.evid.length} recibidas</span></summary><div class="cuerpo">${q.evid.map((t,i)=>`<label class="casilla"><input type="checkbox" data-a="evx" data-id="${esc(q.id)}" data-i="${i}" ${xs.includes(i)?'checked':''}><span>${esc(t)}</span></label>`).join('')}</div></details>`;}
@@ -199,7 +199,8 @@ function sPreguntar(s,g){
     return h;
   }
   const filt=esCheck(s)||filtroQ==='todas'?(()=>true):filtroQ==='pend'?(q=>R(q.id).s==='pendiente'):(q=>R(q.id).s!=='pendiente');
-  h+=base.filter(filt).map(q=>cardQ(q)).join('')||vacio('check','Nada en este filtro','Pruebe con «Todas».');
+  const bf=base.filter(filt);let gAnt='';
+  h+=bf.map(q=>{let d='';if(q.grp&&q.grp!==gAnt){gAnt=q.grp;d=`<div class="seccion-t"><h2 style="font-size:1rem">${esc(q.grp)}</h2></div>`;}return d+cardQ(q);}).join('')||vacio('check','Nada en este filtro','Pruebe con «Todas».');
   const trf=tr.filter(filt);
   if(trf.length)h+=`<details class="card" ${tr.some(q=>R(q.id).s!=='pendiente')?'open':''}><summary style="cursor:pointer;font-weight:600">Preguntas transversales (${trf.length})</summary><p class="small mut" style="margin-top:6px">Para cualquier entrevistado. Cubren política, objetivos, capacitación y reporte de incidentes.</p>${trf.map(q=>cardQ(q)).join('')}</details>`;
   return h;

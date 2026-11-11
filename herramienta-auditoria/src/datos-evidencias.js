@@ -100,33 +100,106 @@ const EVID={
  'Certificados de borrado seguro o destrucción de los últimos equipos dados de baja (fecha, método, responsable)',
  'Registro de baja de activos en el inventario, cotejado con los certificados (muestra de 3)',
  'Contrato y acreditaciones del proveedor que realiza la destrucción o el reciclaje, si es externo'],
-'tecnologia.T1':[
+'T1':[
  'Política de seguridad de la información vigente (versión, fecha y aprobación de la dirección)',
  'Evidencia de comunicación de la política al personal (correo, intranet, inducción, firma de recepción)',
  'Verificación de campo: preguntar a 2-3 empleados al azar y anotar la respuesta espontánea'],
-'tecnologia.T2':[
+'T2':[
  'Objetivos de seguridad de la información con indicadores, meta, responsable y fecha de medición',
  'Evidencia de comunicación de los objetivos al área',
  'Verificación de campo: que el entrevistado explique con sus palabras cómo contribuye su trabajo'],
-'tecnologia.T3':[
+'T3':[
  'Plan anual de capacitación y concientización en seguridad',
  'Registros de asistencia o certificados de los entrevistados (fecha, tema, duración)',
  'Evaluaciones o simulacros de phishing y sus resultados',
  'Evidencia de inducción en seguridad para el personal nuevo'],
-'tecnologia.T4':[
+'T4':[
  'Procedimiento de reporte de eventos e incidentes de seguridad y canal oficial (correo, ticket)',
  'Registro de eventos e incidentes reportados en el último año con su análisis y cierre',
  'Evidencia de que el entrevistado conoce el canal (cartelera, intranet o respuesta verbal)'],
-'tecnologia.T5':[
+'T5':[
  'Proceso disciplinario aplicable a incumplimientos de seguridad, comunicado al personal',
  'Cláusulas de seguridad en contratos o acuerdos de confidencialidad firmados (muestra)',
  'Casos de incumplimiento tratados en el último año y su resolución (sin datos personales innecesarios)'],
-'tecnologia.T6':[
+'T6':[
  'Política de uso aceptable de activos, correo, internet y dispositivos, con aceptación del personal',
  'Reglas para uso de cuentas, equipos y USB personales',
  'Excepciones autorizadas y controles compensatorios'],
-'tecnologia.T7':[
+'T7':[
  'Observación directa de escritorios y pantallas durante el recorrido (anotar hora y área, sin fotografiar personas)',
  'Política de escritorio y pantalla limpios, con fecha y aprobación',
  'Configuración de bloqueo automático de pantalla (política del sistema)']
 };
+Object.assign(EVID,{
+'servicios_ti.1':[
+ 'Catálogo de servicios y productos TI con clientes y acuerdos de nivel de servicio (SLA)',
+ 'Identificación de los servicios críticos y su relación con el alcance del SGSI (documento de alcance)',
+ 'Análisis de impacto al negocio (BIA) o clasificación de criticidad de servicios',
+ 'Organigrama y roles del área de operaciones, con responsable por servicio'],
+'servicios_ti.2':[
+ 'Plan de continuidad del negocio y de recuperación ante desastres (BCP/DRP) vigente, con fecha, versión y aprobación',
+ 'Sección del plan que defina qué controles de seguridad se mantienen en contingencia (accesos, cifrado, registros)',
+ 'Análisis de impacto al negocio (BIA) y evaluación de riesgos de continuidad',
+ 'Lista de contactos y roles de crisis actualizada, y evidencia de su difusión',
+ 'Registro de activación del plan en un evento real o simulacro, con lecciones aprendidas'],
+'servicios_ti.3':[
+ 'Tabla de RTO y RPO por sistema crítico, aprobada por la dirección o los dueños del servicio',
+ 'Informe de la última prueba de recuperación: fecha, alcance, participantes, tiempos reales frente a RTO/RPO y resultado',
+ 'Plan de acciones correctivas derivado de la prueba y evidencia de su cierre',
+ 'Calendario anual de pruebas de continuidad y recuperación',
+ 'Reportes de respaldos o réplicas que sustentan el RPO declarado'],
+'servicios_ti.4':[
+ 'Procedimiento de gestión de incidentes de seguridad: roles, clasificación, escalamiento y comunicación',
+ 'Registro de incidentes de los últimos 12 meses con clasificación, fechas de detección y cierre, causa raíz y acción tomada',
+ 'Expediente completo del último incidente: detección, evaluación, contención, recuperación e informe final',
+ 'Evidencia de lecciones aprendidas y de cambios derivados (controles, capacitación, procedimientos)',
+ 'Eventos reportados por usuarios, clientes o proveedores y cómo se decidió si eran incidentes',
+ 'Evidencia de notificación a clientes o autoridades cuando correspondía según contratos y normativa aplicable'],
+'servicios_ti.5':[
+ 'Procedimiento de recolección y preservación de evidencia digital',
+ 'Registro de cadena de custodia de un caso real o simulado (quién, cuándo, dónde se guardó)',
+ 'Evidencia de retención de registros e imágenes del último incidente investigado',
+ 'Roles autorizados a recolectar evidencia y su formación'],
+'servicios_ti.6':[
+ 'Panel o consola de monitoreo mostrado EN VIVO: qué sistemas cubre y alertas abiertas',
+ 'Lista de elementos monitoreados cotejada contra el inventario de activos críticos',
+ 'Alertas del último mes con su ticket, responsable y tiempo de respuesta',
+ 'Esquema de guardias o turnos para atención fuera de horario, coherente con el SLA comprometido',
+ 'Procedimiento de revisión de alertas y umbrales definidos',
+ 'Reporte periódico de monitoreo al responsable del servicio o a la dirección'],
+'servicios_ti.7':[
+ 'Diagrama de arquitectura con puntos únicos de falla y componentes redundantes',
+ 'Evidencia de redundancia en energía, enlaces y servidores de los sistemas críticos',
+ 'Informe de la última prueba de conmutación (failover) con su resultado',
+ 'Contratos de enlaces o nube que sustentan la disponibilidad comprometida en el SLA'],
+'servicios_ti.8':[
+ 'Procedimiento de gestión de cambios: solicitud, evaluación de riesgo, aprobación, pruebas, implementación y reversión',
+ 'Expedientes completos de 3 cambios recientes elegidos por usted (solicitud, aprobación, pruebas, reversión y cierre)',
+ 'Registro de cambios de emergencia y su revisión posterior',
+ 'Calendario de ventanas de cambio y comunicaciones a las partes afectadas',
+ 'Verificación de que el solicitante no se aprueba a sí mismo (roles distintos)',
+ 'Configuración antes y después de uno de los cambios'],
+'servicios_ti.9':[
+ 'Informes de capacidad de almacenamiento, procesamiento y ancho de banda de los últimos meses',
+ 'Umbrales y alertas de capacidad configurados',
+ 'Plan de crecimiento o presupuesto asociado a las proyecciones',
+ 'Evidencia de una ampliación de capacidad realizada de forma planificada (no reactiva)'],
+'servicios_ti.10':[
+ 'Inventario de activos con propietario, ubicación, clasificación y fecha de última actualización',
+ 'Prueba en dos direcciones: 3 equipos hallados en campo contra el inventario y 3 del inventario ubicados físicamente',
+ 'Procedimiento de gestión del inventario y de asignación de propietarios',
+ 'Registro de devolución de activos de personas que salieron en los últimos 6 meses',
+ 'Esquema de clasificación y etiquetado de la información y su aplicación en una muestra'],
+'servicios_ti.11':[
+ 'Procedimientos operativos documentados de al menos 2 tareas críticas (respaldo, altas y bajas, despliegue)',
+ 'Registros de ejecución recientes de esos procedimientos, que demuestren que se siguen',
+ 'Control documental: versión, fecha de aprobación y acceso del personal que los usa',
+ 'Verificación de campo: que un operador explique o ejecute el procedimiento sin ayuda de su autor'],
+'servicios_ti.12':[
+ 'Lista de proveedores críticos (nube, hosting, conectividad, soporte) con su criticidad',
+ 'Contratos y SLA de una muestra de 3 proveedores críticos, con cláusulas de seguridad y confidencialidad',
+ 'Evaluación inicial y revisión periódica del proveedor (desempeño, incidentes, auditorías)',
+ 'Certificaciones o informes independientes del proveedor (ej.: ISO 27001, SOC 2) vigentes y su alcance',
+ 'Acuerdos de confidencialidad firmados y plan de salida o terminación del servicio',
+ 'Incidentes o cambios del proveedor que afectaron a la empresa y su gestión']
+});
